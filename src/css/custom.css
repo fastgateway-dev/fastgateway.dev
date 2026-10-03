@@ -51,6 +51,23 @@ html, body {
     no-repeat;
 }
 
+/* X (Twitter) icon in navbar */
+.header-x-link::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  display: flex;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' fill='%23181717'/%3E%3C/svg%3E")
+    no-repeat center;
+  background-size: contain;
+}
+
+[data-theme='dark'] .header-x-link::before {
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' fill='%23ffffff'/%3E%3C/svg%3E")
+    no-repeat center;
+  background-size: contain;
+}
+
 /* Bold navbar links */
 .navbar__link {
   font-weight: 500;

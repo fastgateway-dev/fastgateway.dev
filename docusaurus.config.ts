@@ -55,6 +55,20 @@ const config: Config = {
       },
     ],
   ],
+  themes: [
+    [
+      require.resolve('@easyops-cn/docusaurus-search-local'),
+      {
+        hashed: true,
+        indexDocs: true,
+        indexBlog: true,
+        docsRouteBasePath: '/docs',
+        blogRouteBasePath: '/blog',
+        highlightSearchTermsOnTargetPage: true,
+        explicitSearchResultPath: true,
+      },
+    ],
+  ],
   headTags: [
     {
       tagName: 'link',
@@ -166,6 +180,13 @@ const config: Config = {
           sidebarId: 'docs',
           position: 'left',
           label: 'Documentation',
+        },
+        {to: '/blog', label: 'Blog', position: 'left'},
+        {
+          href: 'https://x.com/fastgatewaydev',
+          position: 'right',
+          className: 'header-x-link',
+          'aria-label': 'X (Twitter)',
         },
         {
           href: 'https://github.com/fastgateway-dev',
