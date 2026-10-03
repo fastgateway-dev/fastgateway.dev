@@ -33,6 +33,18 @@ const FeatureList: FeatureItem[] = [
     link: '/docs/tasks/security/configure-cors',
   },
   {
+    title: 'Certificate Management',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <circle cx="12" cy="8" r="6" />
+        <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+      </svg>
+    ),
+    description:
+      'Issue TLS server and client (mTLS) certificates from a platform CA — cert-manager-backed, with self-signed and ACME issuers, approvals, and automatic renewal.',
+    link: '/docs/getting-started/installation',
+  },
+  {
     title: 'Extensibility',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -73,17 +85,30 @@ const FeatureList: FeatureItem[] = [
     link: '/docs/getting-started/installation',
   },
   {
-    title: 'Multi-Cluster & API',
+    title: 'Multi-Cluster',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <circle cx="12" cy="12" r="10" />
-        <line x1="2" y1="12" x2="22" y2="12" />
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+        <rect x="14" y="14" width="7" height="7" rx="1.5" />
       </svg>
     ),
     description:
-      'Manage multiple clusters, personal API tokens for automation, and easy integration with your internal developer platform.',
+      'Manage multiple Kubernetes clusters from a single control plane, with project-based isolation across environments.',
     link: '/docs/concepts/projects',
+  },
+  {
+    title: 'API',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="16 18 22 12 16 6" />
+        <polyline points="8 6 2 12 8 18" />
+      </svg>
+    ),
+    description:
+      'A full REST API and personal access tokens for automation and integration with your internal developer platform.',
+    link: '/docs/reference/api-reference',
   },
 ];
 
