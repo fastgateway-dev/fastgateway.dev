@@ -61,6 +61,29 @@ const capabilities: Capability[] = [
     reversed: true,
   },
   {
+    title: 'Certificate Management',
+    subtitle: 'TLS and mTLS identities, issued for you',
+    description:
+      'Issue and manage TLS certificates from a platform CA — server certificates for your domains and client certificates for mutual TLS — backed by cert-manager, with approval workflows and full visibility.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="8" r="6" />
+        <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+      </svg>
+    ),
+    items: [
+      'Managed server certificates issued from a private CA and attached to domains',
+      'Client (mTLS) certificates bound to clients for mutual TLS',
+      'Managed-key or caller-supplied CSR mode (the private key never leaves the client)',
+      'Self-signed CA and ACME issuers, including DNS-01 via DNS provider credentials',
+      'cert-manager-backed issuance with automatic renewal',
+      'Approval-gated issuance and single-use, user-bound key export',
+      'Per-project and fleet-wide certificate visibility and status',
+    ],
+    screenshot: '/img/certificate.png',
+    reversed: false,
+  },
+  {
     title: 'Extensibility',
     subtitle: 'Customize every request',
     description:
@@ -83,7 +106,7 @@ const capabilities: Capability[] = [
       'Request buffering and connection tuning',
     ],
     screenshot: '/img/extensibility.webp',
-    reversed: false,
+    reversed: true,
   },
   {
     title: 'Users, Teams & Governance',
@@ -108,7 +131,7 @@ const capabilities: Capability[] = [
       'SSO/OIDC for team onboarding',
     ],
     screenshot: '/img/audit-log.webp',
-    reversed: true,
+    reversed: false,
   },
   {
     title: 'Route History & Rollback',
@@ -130,7 +153,7 @@ const capabilities: Capability[] = [
       'Rollback protection with approval workflow integration',
     ],
     screenshot: '/img/history-management-route.webp',
-    reversed: false,
+    reversed: true,
   },
   {
     title: 'AI-Powered Intelligence',
@@ -152,7 +175,7 @@ const capabilities: Capability[] = [
       'Manifest import with AI-assisted validation',
     ],
     screenshot: '/img/ai-review.webp',
-    reversed: true,
+    reversed: false,
   },
   {
     title: 'Multi-Cluster & API',
@@ -174,7 +197,7 @@ const capabilities: Capability[] = [
       'TLS termination, passthrough, and HTTP/3 support',
     ],
     screenshot: '/img/multi-cluster.webp',
-    reversed: false,
+    reversed: true,
   },
 ];
 
