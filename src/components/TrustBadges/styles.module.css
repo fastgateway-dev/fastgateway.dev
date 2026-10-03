@@ -27,6 +27,11 @@
   flex-wrap: wrap;
 }
 
+.badgeLink {
+  display: inline-flex;
+  align-items: center;
+}
+
 .badgeLogo {
   height: 36px;
   width: auto;
@@ -34,6 +39,6 @@
   transition: opacity 0.2s ease;
 }
 
-.badgeLogo:hover {
+.badgeLink:hover .badgeLogo {
   opacity: 1;
 }
