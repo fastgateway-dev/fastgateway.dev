@@ -1,0 +1,183 @@
+.capabilities {
+  padding: 6rem 0;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.capabilitiesContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.sectionLabel {
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ifm-color-primary);
+  margin-bottom: 0.75rem;
+}
+
+.sectionTitle {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.sectionSubtitle {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--ifm-color-emphasis-600);
+  margin-bottom: 5rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.capabilitySections {
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
+}
+
+/* Each capability section */
+.capabilitySection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+
+.capabilitySection.reversed {
+  direction: rtl;
+}
+
+.capabilitySection.reversed > * {
+  direction: ltr;
+}
+
+@media (max-width: 768px) {
+  .capabilitySection {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .capabilitySection.reversed {
+    direction: ltr;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+  }
+}
+
+/* Content side */
+.capabilityIcon {
+  width: 36px;
+  height: 36px;
+  color: var(--ifm-color-primary);
+  margin-bottom: 1rem;
+}
+
+.capabilityTitle {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+}
+
+.capabilitySubtitle {
+  font-size: 0.9rem;
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.capabilityDescription {
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.capabilityList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.capabilityList li {
+  position: relative;
+  padding-left: 1.25rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.capabilityList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  opacity: 0.5;
+}
+
+/* Visual side */
+.capabilityVisual {
+  display: flex;
+  justify-content: center;
+}
+
+.screenshot {
+  width: 100%;
+  max-width: 520px;
+  border-radius: 0.75rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='dark'] .screenshot {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.screenshotPlaceholder {
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 16 / 10;
+  border-radius: 0.75rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: var(--ifm-color-emphasis-50);
+}
+
+[data-theme='dark'] .screenshotPlaceholder {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.placeholderIcon {
+  width: 40px;
+  height: 40px;
+  color: var(--ifm-color-emphasis-300);
+}
+
+.placeholderText {
+  font-size: 0.8rem;
+  color: var(--ifm-color-emphasis-400);
+  font-weight: 500;
+}

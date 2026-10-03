@@ -1,0 +1,179 @@
+.footer {
+  background: #0c111d;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0;
+}
+
+[data-theme='light'] .footer {
+  background: #111827;
+}
+
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Top section */
+.footerTop {
+  display: flex;
+  gap: 4rem;
+  padding: 4rem 0 3rem;
+}
+
+/* Brand column */
+.brandCol {
+  flex: 0 0 280px;
+}
+
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+}
+
+.brandLink:hover {
+  text-decoration: none;
+}
+
+.brandLogo {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+}
+
+.brandName {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.01em;
+}
+
+.brandTagline {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.5;
+  margin: 0 0 1.5rem;
+}
+
+/* Social icons */
+.socialRow {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.socialIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.15s ease;
+}
+
+.socialIcon:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Link columns */
+.linkColumns {
+  flex: 1;
+  display: flex;
+  gap: 3rem;
+  justify-content: flex-end;
+}
+
+.linkCol {
+  min-width: 120px;
+}
+
+.colTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0 0 1rem;
+}
+
+.colLinks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.colLinks a {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.colLinks a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+/* Bottom bar */
+.footerBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.copyright {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0;
+}
+
+/* Theme toggle */
+.toggleButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toggleButton:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footerTop {
+    flex-direction: column;
+    gap: 2.5rem;
+    padding: 3rem 0 2rem;
+  }
+
+  .brandCol {
+    flex: none;
+  }
+
+  .linkColumns {
+    justify-content: flex-start;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+}

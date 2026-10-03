@@ -1,0 +1,128 @@
+.quickstart {
+  padding: 6rem 0;
+  background: linear-gradient(180deg, var(--ifm-color-primary-darkest), #0f172a);
+  color: white;
+}
+
+.quickstartContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+
+.sectionLabel {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ifm-color-primary-lighter);
+  margin-bottom: 0.75rem;
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+  color: white;
+}
+
+.sectionSubtitle {
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 2.5rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.stepsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+.step {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.stepHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem 0;
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.stepLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.codeBlock {
+  padding: 0.75rem 1.25rem 1rem;
+}
+
+.codeBlock pre {
+  margin: 0;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.codeBlock code {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.links {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.linkPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ifm-color-primary-lighter);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(96, 165, 250, 0.3);
+  transition: all 0.2s ease;
+  letter-spacing: 0.01em;
+}
+
+.linkPrimary:hover {
+  color: white;
+  border-bottom-color: white;
+  text-decoration: none;
+  gap: 0.75rem;
+}
+
+.linkPrimary svg {
+  transition: transform 0.2s ease;
+}
+
+.linkPrimary:hover svg {
+  transform: translateX(2px);
+}

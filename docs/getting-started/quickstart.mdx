@@ -1,0 +1,127 @@
+---
+sidebar_position: 4
+title: Quickstart
+---
+
+export const Step = ({number, title, children, src, alt, flip}) => (
+  <div style={{
+    display: 'flex',
+    flexDirection: src ? (flip ? 'row-reverse' : 'row') : 'column',
+    gap: '2rem',
+    alignItems: src ? 'center' : 'flex-start',
+    marginBottom: '3rem',
+    paddingBottom: '3rem',
+    borderBottom: '1px solid var(--ifm-color-emphasis-200)',
+  }}>
+    <div style={{flex: '1', minWidth: 0}}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem'}}>
+        <span style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '2rem',
+          height: '2rem',
+          borderRadius: '50%',
+          background: 'var(--ifm-color-primary)',
+          color: 'white',
+          fontSize: '0.85rem',
+          fontWeight: 700,
+          flexShrink: 0,
+        }}>{number}</span>
+        <h3 style={{margin: 0, fontSize: '1.25rem'}}>{title}</h3>
+      </div>
+      <div>{children}</div>
+    </div>
+    {src && (
+      <div style={{flex: '1.2', minWidth: 0}}>
+        <img
+          src={src}
+          alt={alt}
+          style={{
+            width: '100%',
+            borderRadius: '12px',
+            border: '1px solid var(--ifm-color-emphasis-200)',
+            boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
+          }}
+        />
+      </div>
+    )}
+  </div>
+);
+
+# Quickstart
+
+This guide will help you create and deploy your first route.
+
+<Step number="1" title="Create a Project" src="/img/quickstart-create-project.png" alt="Create a project">
+
+1. Navigate to **Projects** in the sidebar
+2. Click **Create Project**
+3. Enter a project name (e.g., `my-first-project`)
+4. Add a description (optional)
+5. Click **Create**
+
+</Step>
+
+<Step number="2" title="Create a Domain Template" src="/img/quickstart-create-domain-template.png" alt="Create a domain template" flip>
+
+1. Navigate to **Domain Templates** in the sidebar
+2. Click **Create Template**
+3. Enter a template name (e.g., `default-template`)
+4. Configure the template settings:
+   - Select service type (LoadBalancer or ClusterIP)
+   - Configure TLS settings if needed
+   - Configure HPA scaling and compute requests limits
+5. Click **Create**
+
+</Step>
+
+<Step number="3" title="Create a Domain" src="/img/quickstart-create-domain.png" alt="Create a domain">
+
+1. Navigate to your project
+2. Go to the **Domains** tab
+3. Click **Create Domain**
+4. Enter the domain hostname (e.g., `api.example.com`)
+5. Select the domain template you created
+6. Click **Create**
+
+</Step>
+
+<Step number="4" title="Create a Route" src="/img/quickstart-create-route.png" alt="Create a route" flip>
+
+1. Within your domain, click **Create Route**
+2. Configure the route:
+   - **Name**: `my-first-route`
+   - **Path**: `/api/v1`
+   - **Match Type**: `PathPrefix`
+3. Add a backend:
+   - **Service Name**: Your backend service name
+   - **Service Port**: The port your service listens on
+4. Click **Create**
+
+</Step>
+
+<Step number="5" title="Approve and Deploy">
+
+1. Navigate to **Approvals** in the sidebar
+2. Find your pending route
+3. Review the configuration
+4. Click **Approve** to approve the change
+5. Once approved, the route will be deployed to your cluster
+
+</Step>
+
+## Verify the Deployment
+
+Check that the HTTPRoute was created:
+
+```bash
+kubectl get httproute -n your-namespace
+```
+
+Test your route:
+
+```bash
+curl -H "Host: api.example.com" http://your-gateway-ip/api/v1
+```
+

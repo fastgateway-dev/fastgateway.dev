@@ -1,0 +1,39 @@
+---
+sidebar_position: 3
+title: Accessing the UI
+---
+
+# Accessing the UI
+
+This guide covers the different methods for accessing the FastGateway user interface.
+
+## Port-Forward Method
+
+The simplest way to access FastGateway is using kubectl port-forward:
+
+```bash
+kubectl port-forward svc/fastgateway-frontend 3001:3001 -n fastgateway-system
+```
+
+Then open your browser and navigate to:
+
+```
+http://localhost:3001
+```
+
+<div style={{marginTop: '2rem', marginBottom: '2rem'}}>
+  <img
+    src="/img/ui-overview.png"
+    alt="FastGateway UI"
+    style={{
+      width: '100%',
+      borderRadius: '12px',
+      border: '1px solid var(--ifm-color-emphasis-200)',
+      boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
+    }}
+  />
+</div>
+
+## Next Steps
+
+- Follow the [Quickstart](./quickstart) guide to create your first route
