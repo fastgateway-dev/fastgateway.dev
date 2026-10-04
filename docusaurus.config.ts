@@ -40,6 +40,24 @@ const config: Config = {
         },
       } satisfies Preset.Options,
     ],
+    [
+      'redocusaurus',
+      {
+        // Interactive API reference (Redoc). The spec is a committed copy of
+        // backend-v2's docs/openapi/openapi.yaml — refresh it with
+        // `make openapi.sync`. Also downloadable at /openapi.yaml.
+        specs: [
+          {
+            id: 'fastgateway-api',
+            spec: 'static/openapi.yaml',
+            route: '/api/',
+          },
+        ],
+        theme: {
+          primaryColor: '#2563eb',
+        },
+      },
+    ],
   ],
   plugins: [
     [
@@ -181,6 +199,7 @@ const config: Config = {
           position: 'left',
           label: 'Documentation',
         },
+        {to: '/api/', label: 'API Reference', position: 'left'},
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://x.com/fastgatewaydev',
