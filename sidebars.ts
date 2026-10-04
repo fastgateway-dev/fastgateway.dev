@@ -19,6 +19,7 @@ const sidebars: SidebarsConfig = {
     //     'concepts/projects',
     //     'concepts/domain-templates',
     //     'concepts/domains',
+    //     'concepts/dns-management',
     //     'concepts/routes',
     //     'concepts/clients',
     //     'concepts/security-modes',
