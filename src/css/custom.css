@@ -23,6 +23,9 @@ html, body {
   --ifm-color-primary-lightest: #93c5fd;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  /* Thin, slate-grey headings for the marketing pages */
+  --fg-heading: #334155; /* slate-700 */
+  --fg-heading-soft: #64748b; /* slate-500 */
 }
 
 [data-theme='dark'] {
@@ -34,6 +37,8 @@ html, body {
   --ifm-color-primary-lighter: #93c5fd;
   --ifm-color-primary-lightest: #bfdbfe;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --fg-heading: #e2e8f0; /* slate-200 */
+  --fg-heading-soft: #94a3b8; /* slate-400 */
 }
 
 /* GitHub icon in navbar */
