@@ -19,21 +19,16 @@ Domain templates define reusable Gateway settings that domains can inherit, ensu
 
 ## How Templates Work
 
-```
-┌──────────────────┐
-│  Domain Template │
-│  ─────────────── │
-│  exposure: public│
-│  port: 443       │
-│  tls: terminate  │
-└────────┬─────────┘
-         │ inherits
-    ┌────┴────┐
-    ▼         ▼
-┌────────┐ ┌────────┐
-│Domain A│ │Domain B│
-│api.com │ │app.com │
-└────────┘ └────────┘
+```mermaid
+flowchart TD
+    T["<b>Domain Template</b><br/>exposure: public<br/>port: 443<br/>tls: terminate"]
+    T -->|inherits| A["<b>Domain A</b><br/>api.com"]
+    T -->|inherits| B["<b>Domain B</b><br/>app.com"]
+
+    classDef template fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px,color:#1e293b;
+    classDef domain fill:#ffffff,stroke:#cbd5e1,stroke-width:1.5px,color:#334155;
+    class T template;
+    class A,B domain;
 ```
 
 ## Common Template Patterns

@@ -12,6 +12,9 @@ const config: Config = {
   projectName: 'fastgateway.dev',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
+  markdown: {
+    mermaid: true,
+  },
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -74,6 +77,7 @@ const config: Config = {
     ],
   ],
   themes: [
+    '@docusaurus/theme-mermaid',
     [
       require.resolve('@easyops-cn/docusaurus-search-local'),
       {
@@ -186,6 +190,12 @@ const config: Config = {
       disableSwitch: true,
     },
     image: 'img/fastgateway-social-card.png',
+    mermaid: {
+      theme: {light: 'neutral', dark: 'dark'},
+      options: {
+        fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+      },
+    },
     navbar: {
       title: 'FastGateway',
       logo: {
@@ -199,7 +209,6 @@ const config: Config = {
           position: 'left',
           label: 'Documentation',
         },
-        {to: '/api/', label: 'API Reference', position: 'left'},
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://x.com/fastgatewaydev',
