@@ -10,38 +10,28 @@ FastGateway implements a **unified multi-stage approval system** for all change 
 
 ## Unified Approval Flow
 
-```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                         UNIFIED APPROVAL SYSTEM                             │
-├────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   ┌─────────────┐                                                          │
-│   │   Entity    │  Route create/update/delete                              │
-│   │   Change    │  Client attachment attach/detach                         │
-│   └──────┬──────┘                                                          │
-│          │                                                                  │
-│          ▼                                                                  │
-│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐                 │
-│   │  Stage 1    │────▶│  Stage 2    │────▶│  Stage N    │                 │
-│   │  Approval   │     │  Approval   │     │  Approval   │                 │
-│   └──────┬──────┘     └──────┬──────┘     └──────┬──────┘                 │
-│          │                   │                   │                         │
-│          │ Reject            │ Reject            │ All Approved           │
-│          ▼                   ▼                   ▼                         │
-│   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐                 │
-│   │  REJECTED   │     │  REJECTED   │     │  APPROVED   │                 │
-│   └─────────────┘     └─────────────┘     └──────┬──────┘                 │
-│                                                   │                        │
-│                                                   ▼                        │
-│                                           ┌─────────────┐                  │
-│                                           │   Deploy    │ (Routes only)   │
-│                                           └──────┬──────┘                  │
-│                                                   │                        │
-│                                                   ▼                        │
-│                                           ┌─────────────┐                  │
-│                                           │   ACTIVE    │                  │
-│                                           └─────────────┘                  │
-└────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    E["<b>Entity Change</b><br/>Route create / update / delete<br/>Client attachment attach / detach"]
+    E --> S1["<b>Stage 1</b><br/>Approval"]
+    S1 -->|approve| S2["<b>Stage 2</b><br/>Approval"]
+    S2 -->|approve| SN["<b>Stage N</b><br/>Approval"]
+    S1 -->|reject| RJ["REJECTED"]
+    S2 -->|reject| RJ
+    SN -->|reject| RJ
+    SN -->|all approved| AP["<b>APPROVED</b>"]
+    AP --> DP["<b>Deploy</b><br/>Routes only"]
+    DP --> AC["<b>ACTIVE</b>"]
+
+    classDef stage fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px,color:#1e293b;
+    classDef bad fill:#fef2f2,stroke:#ef4444,stroke-width:1.5px,color:#7f1d1d;
+    classDef good fill:#f0fdf4,stroke:#16a34a,stroke-width:1.5px,color:#14532d;
+    classDef plain fill:#ffffff,stroke:#cbd5e1,stroke-width:1.5px,color:#334155;
+    class E plain;
+    class S1,S2,SN stage;
+    class RJ bad;
+    class AP,AC good;
+    class DP plain;
 ```
 
 ## Approval Entities
@@ -80,21 +70,17 @@ The unified system handles two entity types:
 
 Each approval consists of one or more **stages** that must be completed sequentially:
 
-```
-┌────────────────────────────────────────────────────────────────┐
-│                     Approval Stages                             │
-├────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  Stage 1                  Stage 2                  Stage N     │
-│  ┌──────────────────┐    ┌──────────────────┐    ┌────────┐   │
-│  │ required_perm:   │    │ required_perm:   │    │  ...   │   │
-│  │   route.approve  │───▶│   client.approve │───▶│        │   │
-│  │                  │    │                  │    │        │   │
-│  │ team_scope: any  │    │ team_scope:      │    │        │   │
-│  │                  │    │   other_team     │    │        │   │
-│  └──────────────────┘    └──────────────────┘    └────────┘   │
-│                                                                 │
-└────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    S1["<b>Stage 1</b><br/>required_perm: route.approve<br/>team_scope: any"]
+    S2["<b>Stage 2</b><br/>required_perm: client.approve<br/>team_scope: other_team"]
+    SN["<b>Stage N</b><br/>…"]
+    S1 --> S2 --> SN
+
+    classDef stage fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px,color:#1e293b;
+    classDef plain fill:#ffffff,stroke:#cbd5e1,stroke-width:1.5px,color:#334155;
+    class S1,S2 stage;
+    class SN plain;
 ```
 
 ### Stage Configuration

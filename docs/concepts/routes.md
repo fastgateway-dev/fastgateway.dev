@@ -43,10 +43,12 @@ backends:
 
 Routes follow a controlled deployment process:
 
-```
-┌────────┐     ┌─────────┐     ┌──────────┐
-│ Submit │ ──▶ │ Approve │ ──▶ │  Deploy  │
-└────────┘     └─────────┘     └──────────┘
+```mermaid
+flowchart LR
+    A["Submit"] --> B["Approve"] --> C["Deploy"]
+
+    classDef step fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px,color:#1e293b;
+    class A,B,C step;
 ```
 
 | Status | Description |

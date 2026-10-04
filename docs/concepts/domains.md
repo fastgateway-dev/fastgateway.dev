@@ -27,11 +27,12 @@ A domain maps to a single Kubernetes Gateway resource with:
 
 ## Domain Lifecycle
 
-```
-┌─────────┐     ┌──────────┐     ┌──────────┐
-│ Create  │ ──▶ │  Active  │ ──▶ │  Delete  │
-│ Domain  │     │ (Gateway)│     │ (Cleanup)│
-└─────────┘     └──────────┘     └──────────┘
+```mermaid
+flowchart LR
+    A["<b>Create</b><br/>Domain"] --> B["<b>Active</b><br/>Gateway"] --> C["<b>Delete</b><br/>Cleanup"]
+
+    classDef step fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px,color:#1e293b;
+    class A,B,C step;
 ```
 
 When you create a domain:

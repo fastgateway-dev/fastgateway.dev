@@ -49,10 +49,12 @@ Clients connect to routes through attachments, which:
 - Enable client-specific security policies
 - Require approval before activation
 
-```
-┌────────┐         ┌────────────┐         ┌───────┐
-│ Client │ ──────▶ │ Attachment │ ──────▶ │ Route │
-└────────┘         └────────────┘         └───────┘
+```mermaid
+flowchart LR
+    A["<b>Client</b>"] --> B["<b>Attachment</b>"] --> C["<b>Route</b>"]
+
+    classDef node fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px,color:#1e293b;
+    class A,B,C node;
 ```
 
 ## Team Ownership

@@ -17,12 +17,15 @@ For a domain with DNS management enabled, FastGateway maintains **one managed DN
 - FastGateway writes a `DNSEndpoint` resource describing the record; it does not call Cloudflare, Route53, Google Cloud DNS, or Azure DNS directly.
 - external-dns watches `DNSEndpoint` resources and reconciles them against your DNS provider.
 
-```
-┌──────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│ Domain   │ ──▶ │  DNSEndpoint │ ──▶ │ external-dns │ ──▶ │ DNS Provider │
-│ (Gateway)│     │   (FastGW)   │     │  (separate)  │     │  (Cloudflare,│
-└──────────┘     └──────────────┘     └──────────────┘     │ Route53, ...)│
-                                                              └──────────────┘
+```mermaid
+flowchart LR
+    A["<b>Domain</b><br/>Gateway"] --> B["<b>DNSEndpoint</b><br/>written by FastGateway"]
+    B --> C["<b>external-dns</b><br/>runs separately"] --> D["<b>DNS Provider</b><br/>Cloudflare, Route53, …"]
+
+    classDef fgw fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px,color:#1e293b;
+    classDef ext fill:#ffffff,stroke:#cbd5e1,stroke-width:1.5px,color:#334155;
+    class A,B fgw;
+    class C,D ext;
 ```
 
 ## Enabling DNS Management
