@@ -1,114 +1,77 @@
 ---
 sidebar_position: 9
 title: DNS Management
-description: Automatic DNS records for domains via external-dns
+description: Automatic DNS records for domains, written directly to your DNS provider
 ---
 
 # DNS Management
 
-FastGateway can manage a DNS record for each domain, pointing its hostname at the gateway's external address. FastGateway never talks to a DNS provider's API directly — it writes a [`DNSEndpoint`](https://github.com/kubernetes-sigs/external-dns/blob/master/docs/contributing/crd-source.md) custom resource, and [external-dns](https://github.com/kubernetes-sigs/external-dns) — running separately in your cluster — reads that resource and creates the record with your provider.
+FastGateway can manage a DNS record for each domain, pointing its hostname at the gateway's load-balancer address. FastGateway writes records **directly** to your DNS provider's API — there is no external-dns installation, no custom resource, and no extra component to run in your cluster.
 
-## What It Does
+## How It Works
 
-For a domain with DNS management enabled, FastGateway maintains **one managed DNS record**:
+DNS management has three parts, set up in order:
 
-- The record's hostname is the domain's hostname (e.g., `api.example.com`).
-- The record's target is the gateway's external address (the Gateway's `status.addresses`), as an `A`/`AAAA` record for an IP or a `CNAME` for a hostname-based load balancer.
-- FastGateway writes a `DNSEndpoint` resource describing the record; it does not call Cloudflare, Route53, Google Cloud DNS, or Azure DNS directly.
-- external-dns watches `DNSEndpoint` resources and reconciles them against your DNS provider.
+1. **Register a DNS provider credential** — an owner adds the API credential for Cloudflare, AWS Route 53, or Google Cloud DNS. This is the same credential registry used for ACME DNS-01 certificate issuance, so if you've already added a credential for certificates, you can reuse it here.
+2. **Register a hosted zone** — an owner registers the zone you want FastGateway to manage (e.g., `example.com`) and selects which credential to use for it. FastGateway validates the zone against the provider and caches the provider's zone id for later writes.
+3. **Enable DNS on a domain** — in a domain's DNS section, pick a registered hosted zone whose name is the domain's apex or a parent of its hostname. FastGateway resolves the gateway's load-balancer address and writes the record for you.
 
 ```mermaid
 flowchart LR
-    A["<b>Domain</b><br/>Gateway"] --> B["<b>DNSEndpoint</b><br/>written by FastGateway"]
-    B --> C["<b>external-dns</b><br/>runs separately"] --> D["<b>DNS Provider</b><br/>Cloudflare, Route53, …"]
+    A["<b>Credential</b><br/>Cloudflare / Route53 / Google Cloud DNS"] --> B["<b>Hosted Zone</b><br/>registered + validated"]
+    B --> C["<b>Domain</b><br/>DNS enabled"] --> D["<b>Provider API</b><br/>record written directly"]
 
     classDef fgw fill:#eff6ff,stroke:#2563eb,stroke-width:1.5px,color:#1e293b;
     classDef ext fill:#ffffff,stroke:#cbd5e1,stroke-width:1.5px,color:#334155;
-    class A,B fgw;
-    class C,D ext;
+    class A,B,C fgw;
+    class D ext;
 ```
 
-## Enabling DNS Management
+## Registering a DNS Provider Credential
 
-DNS management is opt-in and requires two things:
+Credentials are managed under **DNS settings** and are owner-only. FastGateway supports three providers:
 
-1. **Enable it in the Helm chart** when installing or upgrading FastGateway:
+| Provider | Credential fields |
+|----------|--------------------|
+| Cloudflare | API token |
+| AWS Route 53 | Access key id, secret access key, and an optional region (defaults to `us-east-1`) |
+| Google Cloud DNS | Service account key (JSON) and project |
 
-   ```bash
-   helm upgrade --install fastgateway fastgateway/fastgateway \
-     --namespace fastgateway-system \
-     --set dns.enabled=true \
-     # ...your other --set flags
-   ```
+You can register more than one credential — for example, separate credentials per provider, or per account — and each hosted zone picks the credential it uses when it's registered.
 
-   This grants the FastGateway backend the RBAC it needs to manage `DNSEndpoint` resources.
+## Registering a Hosted Zone
 
-2. **Install external-dns** in your cluster as a prerequisite, pointed at the Secret FastGateway renders. FastGateway writes provider credentials into a Secret named **`fgw-externaldns-credentials`** in the **`fastgateway-system`** namespace; external-dns must be configured to read from CRD sources and use that Secret:
+Once a credential exists, an owner registers the hosted zone(s) FastGateway should manage:
 
-   ```bash
-   helm install external-dns external-dns/external-dns \
-     --namespace fastgateway-system \
-     --set provider=cloudflare \
-     --set extraArgs[0]="--source=crd" \
-     --set extraArgs[1]="--policy=sync" \
-     --set extraArgs[2]="--txt-owner-id=fastgateway" \
-     --set env[0].name=CF_API_TOKEN \
-     --set-string env[0].valueFrom.secretKeyRef.name=fgw-externaldns-credentials \
-     --set-string env[0].valueFrom.secretKeyRef.key=apiToken
-   ```
+1. Provide the zone name (e.g., `example.com`).
+2. Select the credential to use for that zone.
 
-   The exact environment/credential mapping depends on the provider — see [Setting the Active Credential](#setting-the-active-credential) below for each provider's secret keys. The required external-dns flags are the same regardless of provider:
+FastGateway calls the provider's API to confirm the zone exists and is reachable with that credential, and caches the provider's zone id so later record writes don't need to look it up again. If validation fails — the zone doesn't exist, the credential doesn't have access to it, or the credential itself is invalid — the hosted zone is left in an **error** status so you can fix the credential or remove the zone.
 
-   | Flag | Why |
-   |------|-----|
-   | `--source=crd` | Reads records from `DNSEndpoint` custom resources instead of Ingress/Service objects |
-   | `--policy=sync` | Creates, updates, and removes records to match the `DNSEndpoint` resources |
-   | `--txt-owner-id=fastgateway` | Tags records external-dns owns so it doesn't touch unrelated records in the same zone |
-   | `--provider=<cloudflare\|aws\|google\|azure>` | Selects the DNS provider plugin matching your active credential |
+## Enabling DNS on a Domain
 
-See [Installation: external-dns (Optional)](../getting-started/installation#external-dns-optional) for the full prerequisite checklist.
+From a domain's DNS section, you can enable DNS management by selecting a registered hosted zone. The domain's hostname must be the zone's apex (e.g., hostname `example.com` for zone `example.com`) or a subdomain of it (e.g., hostname `api.example.com` for zone `example.com`) — FastGateway matches the domain to a zone this way rather than asking you to pick a record type up front.
 
-## Setting the Active Credential
+Once enabled, FastGateway:
 
-Before any domain can get a managed DNS record, an **owner** must configure a DNS provider credential and mark it active. FastGateway supports one active credential per cluster in v1.
+- Resolves the domain's Gateway load-balancer address.
+- Writes an `A`/`AAAA` record if the address is an IP, or a `CNAME` if it's a hostname. Choosing `auto` lets FastGateway pick the right type for you.
+- Never overwrites a record it doesn't already manage — if a record with the same name already exists at the provider and FastGateway didn't create it, DNS management for that domain reports an error instead of clobbering it.
 
-1. Go to **DNS Credentials** and create a credential for your provider.
-2. Mark that credential **active** in DNS settings — this is the credential FastGateway uses for every domain's DNS record, and it's the credential whose values are rendered into the `fgw-externaldns-credentials` Secret.
-
-FastGateway supports four providers, each with its own credential fields:
-
-| Provider | `--provider` flag | Credential fields |
-|----------|-------------------|--------------------|
-| Cloudflare | `cloudflare` | `apiToken` |
-| AWS Route 53 | `aws` | `accessKeyId`, `secretAccessKey` |
-| Google Cloud DNS | `google` | `serviceAccountKey` (JSON), `project` |
-| Azure DNS | `azure` | `tenantId`, `subscriptionId`, `resourceGroup`, `clientId`, `clientSecret` |
-
-:::note One credential per cluster
-Only one DNS provider credential can be active at a time. All domains in the cluster that have DNS management enabled share that single active credential — switching the active credential changes where new and existing records are reconciled.
-:::
-
-## Auto-Create at Domain Creation
-
-When creating a domain, you can opt in to automatic DNS record creation with a toggle on the create wizard (off by default). When enabled, FastGateway creates the managed DNS record for the domain's hostname as soon as the domain is created, using the active credential — you don't need a separate step afterward. You can still review, edit, or remove the record later from the domain's settings.
+DNS management works for HTTP domains (port 80, no TLS) as well as HTTPS domains — it isn't gated on TLS being enabled.
 
 ## Record Status
 
-Each managed DNS record reports one of four statuses:
+Each domain's managed DNS record reports one of three statuses:
 
 | Status | Meaning |
 |--------|---------|
-| **Pending** | Waiting for the gateway to have an external address; no `DNSEndpoint` has been submitted yet |
-| **Syncing** | A `DNSEndpoint` has been submitted to the cluster |
-| **Ready** | external-dns has picked up the record (the `DNSEndpoint` has been submitted to external-dns) |
-| **Error** | The record couldn't be created or reconciled — see the status message for details |
+| **Pending** | Waiting for the Gateway to report a load-balancer address; FastGateway retries briefly until one is available |
+| **Ready** | The record has been written to the provider |
+| **Error** | Something is misconfigured — for example, a `CNAME` requested at the zone apex, a hosted-zone mismatch with the domain's hostname, or an invalid credential |
 
-:::tip Ready means "submitted," not "verified in your DNS zone"
-**Ready** reflects that the `DNSEndpoint` was accepted and handed to external-dns, not that FastGateway has confirmed the record resolves at your DNS provider. Propagation to the live DNS zone happens on external-dns's own sync interval.
-:::
+## Limitations
 
-## v1 Limitations
-
-- **One provider credential per cluster.** All domains share the single active DNS credential; there is no per-domain or per-project credential selection yet.
-- **FastGateway's own domains only.** DNS management only creates records for domains FastGateway manages (its Gateway resources) — it does not manage unrelated DNS records in your zone.
-- **Non-default namespaces may stay Pending.** Domains whose Gateway resources live outside the namespace FastGateway watches for address status may not resolve a gateway address, and their DNS record will remain in **Pending** until that's available.
+- **Three providers in v1.** Cloudflare, AWS Route 53, and Google Cloud DNS. Other providers aren't supported yet.
+- **One record per domain.** FastGateway manages a single DNS record per domain — the one pointing its hostname at the gateway's address.
+- **FastGateway's own domains only.** DNS management only writes records for domains FastGateway manages (its Gateway resources) — it does not manage unrelated records in your zone, and it won't touch a pre-existing record it doesn't own.

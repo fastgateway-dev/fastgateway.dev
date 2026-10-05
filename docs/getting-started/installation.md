@@ -17,7 +17,6 @@ Before installing FastGateway, ensure you have the following:
 - **Helm 3** installed on your local machine
 - **Envoy Gateway** installed in your cluster
 - **PostgreSQL** database
-- **external-dns** installed in your cluster — *optional*, only needed if you plan to enable [DNS management](../concepts/dns-management)
 
 ### Install Envoy Gateway
 
@@ -101,30 +100,6 @@ kubectl create secret generic fastgateway-secrets \
   --from-literal=admin-password=<your-admin-password> \
   -n fastgateway-system
 ```
-
-### external-dns (Optional)
-
-If you plan to enable [DNS management](../concepts/dns-management) (`dns.enabled=true` in the Helm chart), install [external-dns](https://github.com/kubernetes-sigs/external-dns) in your cluster first. FastGateway never calls a DNS provider's API itself — it writes `DNSEndpoint` custom resources, and external-dns reconciles them against your provider.
-
-Install external-dns configured to read `DNSEndpoint` resources and to use the Secret FastGateway renders (`fgw-externaldns-credentials` in `fastgateway-system`):
-
-```bash
-helm install external-dns external-dns/external-dns \
-  --namespace fastgateway-system \
-  --set provider=<cloudflare|aws|google|azure> \
-  --set extraArgs[0]="--source=crd" \
-  --set extraArgs[1]="--policy=sync" \
-  --set extraArgs[2]="--txt-owner-id=fastgateway"
-```
-
-| Flag | Purpose |
-|------|---------|
-| `--source=crd` | Read records from `DNSEndpoint` custom resources instead of Ingress/Service |
-| `--policy=sync` | Create, update, and remove records to match FastGateway's `DNSEndpoint` resources |
-| `--txt-owner-id=fastgateway` | Scope external-dns to the records it owns in the zone |
-| `--provider=<cloudflare\|aws\|google\|azure>` | The DNS provider matching your active FastGateway DNS credential |
-
-See [DNS Management](../concepts/dns-management) for the four supported providers, their credential fields, and how to set the active credential. This is only required if you enable DNS management — it is not needed for a standard FastGateway installation.
 
 ## Install FastGateway
 
