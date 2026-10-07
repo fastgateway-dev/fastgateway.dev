@@ -8,6 +8,8 @@ description: Gateway resources representing API endpoints
 
 Domains represent Kubernetes Gateway resources, defining the entry points for your API traffic with hostname and TLS configuration.
 
+![Domains in a project, each mapped to a Gateway with a hostname, port, and TLS status](/img/ui-domains.jpg)
+
 ## What is a Domain?
 
 A domain maps to a single Kubernetes Gateway resource with:

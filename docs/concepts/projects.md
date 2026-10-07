@@ -13,6 +13,8 @@ A project is a connection to a Kubernetes cluster where Envoy Gateway is install
 - **Domains**: Active Gateway resources
 - **Routes**: HTTPRoute and GRPCRoute configurations
 
+![The Projects list in FastGateway, showing a connected Kubernetes cluster with its domain and route counts](/img/ui-projects.jpg)
+
 ## Multi-Cluster Management
 
 You can manage multiple Kubernetes clusters simultaneously:

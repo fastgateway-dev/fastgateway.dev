@@ -8,6 +8,8 @@ description: Traffic routing rules and backend configuration
 
 Routes define how traffic flows from domains to backend services, supporting both HTTP and gRPC protocols through Kubernetes Gateway API resources.
 
+![A domain's Routes tab in FastGateway, showing a prefix route forwarding to a backend service](/img/ui-routes.jpg)
+
 ## Route Types
 
 | Type | Resource | Use Case |

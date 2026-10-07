@@ -77,3 +77,17 @@ html, body {
 .navbar__link {
   font-weight: 500;
 }
+
+/* Framed screenshots in docs & blog content (SVG diagrams are unaffected) */
+.markdown img {
+  display: block;
+  max-width: 100%;
+  margin: 1.75rem auto;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(2, 6, 23, 0.08);
+}
+
+[data-theme='dark'] .markdown img {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+}
