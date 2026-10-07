@@ -8,6 +8,8 @@ description: Automatic DNS records for domains, written directly to your DNS pro
 
 FastGateway can manage a DNS record for each domain, pointing its hostname at the gateway's load-balancer address. FastGateway writes records **directly** to your DNS provider's API — there is no external-dns installation, no custom resource, and no extra component to run in your cluster.
 
+![Hosted Zones in FastGateway — a Cloudflare-backed zone registered for direct DNS record management](/img/ui-hosted-zones.jpg)
+
 ## How It Works
 
 DNS management has three parts, set up in order:

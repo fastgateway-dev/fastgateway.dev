@@ -8,6 +8,8 @@ description: General vs Client security approaches
 
 FastGateway offers two mutually exclusive security modes for protecting routes: General and Client mode.
 
+![The Security tab of the route builder — pick General or Client-Based mode, then configure CORS, IP allowlisting, API keys, JWT, OIDC, and external authorization](/img/ui-route-security.jpg)
+
 ## Mode Comparison
 
 | Feature | General Mode | Client Mode |

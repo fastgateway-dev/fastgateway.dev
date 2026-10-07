@@ -7,6 +7,8 @@ description: Configure path, header, method, query parameter, and gRPC routing r
 
 FastGateway supports various routing rules to direct traffic to backends.
 
+![The Traffic tab of the route builder — choose a backend type and add Kubernetes or external services, with weights for traffic splitting](/img/ui-route-traffic.jpg)
+
 ## Path Matching
 
 | Type | Description |

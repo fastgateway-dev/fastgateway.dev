@@ -7,6 +7,8 @@ description: Configure Cross-Origin Resource Sharing (CORS) settings for your ro
 
 FastGateway supports CORS configuration to control cross-origin requests to your APIs.
 
+![The Security tab of the route builder, where CORS Configuration sits alongside IP allowlisting, API key, JWT, and OIDC](/img/ui-route-security.jpg)
+
 ## CORS Settings
 
 | Setting | Description |
