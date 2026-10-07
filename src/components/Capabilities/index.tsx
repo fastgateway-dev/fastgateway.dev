@@ -84,6 +84,29 @@ const capabilities: Capability[] = [
     reversed: false,
   },
   {
+    title: 'DNS Management',
+    subtitle: 'Records that follow your domains',
+    description:
+      'Register a hosted zone with your DNS provider and FastGateway creates and manages a DNS record for every domain automatically — pointed at the gateway, with no manual record-keeping or separate tooling.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="2" y1="12" x2="22" y2="12" />
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </svg>
+    ),
+    items: [
+      'Hosted zones for Cloudflare, Google Cloud DNS, and AWS Route 53',
+      'Automatic DNS record creation when a domain is created',
+      "Records target the gateway's external address (A / AAAA / CNAME)",
+      'Live per-record status — Pending, Syncing, Ready',
+      'Refresh, edit, or delete managed records from the UI',
+      'Project-wide view of every record FastGateway manages',
+    ],
+    screenshot: '/img/dns.png',
+    reversed: true,
+  },
+  {
     title: 'Extensibility',
     subtitle: 'Customize every request',
     description:
@@ -106,7 +129,7 @@ const capabilities: Capability[] = [
       'Request buffering and connection tuning',
     ],
     screenshot: '/img/extensibility.webp',
-    reversed: true,
+    reversed: false,
   },
   {
     title: 'Users, Teams & Governance',
@@ -131,7 +154,7 @@ const capabilities: Capability[] = [
       'SSO/OIDC for team onboarding',
     ],
     screenshot: '/img/audit-log.webp',
-    reversed: false,
+    reversed: true,
   },
   {
     title: 'Route History & Rollback',
@@ -153,7 +176,7 @@ const capabilities: Capability[] = [
       'Rollback protection with approval workflow integration',
     ],
     screenshot: '/img/history-management-route.webp',
-    reversed: true,
+    reversed: false,
   },
   {
     title: 'AI-Powered Intelligence',
@@ -175,7 +198,7 @@ const capabilities: Capability[] = [
       'Manifest import with AI-assisted validation',
     ],
     screenshot: '/img/ai-review.webp',
-    reversed: false,
+    reversed: true,
   },
   {
     title: 'Multi-Cluster & API',
@@ -197,7 +220,7 @@ const capabilities: Capability[] = [
       'TLS termination, passthrough, and HTTP/3 support',
     ],
     screenshot: '/img/multi-cluster.webp',
-    reversed: true,
+    reversed: false,
   },
 ];
 
