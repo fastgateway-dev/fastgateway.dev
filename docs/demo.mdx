@@ -1,7 +1,7 @@
 ---
 sidebar_position: 0
 title: Live Demo
-description: Try FastGateway in a free hosted sandbox — no install required. Walk through projects, teams, issuers, templates, certificates, domains, and routes end to end.
+description: Try FastGateway in a free hosted sandbox. Walk through projects, teams, issuers, templates, certificates, domains, and routes.
 ---
 
 export const Step = ({number, title, children, src, alt, flip}) => (
@@ -52,108 +52,102 @@ export const Step = ({number, title, children, src, alt, flip}) => (
 
 # Live Demo
 
-Try FastGateway right now in a free, hosted sandbox — no cluster, no install, no sign-up.
+Try FastGateway in a free hosted sandbox. No cluster, no install, no sign-up.
 
 :::tip Open the sandbox
 
-**[demo.fastgateway.dev](https://demo.fastgateway.dev)** &nbsp;·&nbsp; username `admin` &nbsp;·&nbsp; password `admin`
+[demo.fastgateway.dev](https://demo.fastgateway.dev) &nbsp;·&nbsp; username `admin` &nbsp;·&nbsp; password `admin`
 
-The demo runs in an **isolated environment that is wiped and rebuilt every 30 minutes**, so feel free to break things — a fresh instance is never far away. Because it resets, treat anything you create as throwaway.
+The sandbox resets every 30 minutes, so treat anything you create as throwaway.
 
 :::
 
-This walkthrough takes you from an empty instance to a working domain and route. The steps build on each other, so follow them in order. The whole flow takes about ten minutes.
+This walkthrough goes from an empty instance to a working domain and route. Follow the steps in order. It takes about ten minutes.
 
-<Step number="1" title="Onboard your first project (in-cluster)" src="/img/demo-1-project.jpg" alt="Create an in-cluster project">
+<Step number="1" title="Onboard a project (in-cluster)" src="/img/demo-1-project.jpg" alt="Create an in-cluster project">
 
-A **project** is where FastGateway provisions its Gateway, domains, and routes. The demo targets the cluster FastGateway itself runs in, so you'll create an **in-cluster** project.
+A project is where FastGateway provisions your Gateway, domains, and routes. The demo uses the cluster FastGateway runs in.
 
-1. Open **Projects** in the sidebar and click **New Project**.
-2. Enter a **Project Name** (e.g. `demo`) and an optional description.
-3. Under **Connection Type**, pick **In-Cluster (Local)** — FastGateway connects to the cluster it runs in using its own service account, so there's nothing else to configure. (The other options, *Kubeconfig* and *API URL + Token*, connect to a remote cluster.)
-4. Click **Create Project**.
-
-</Step>
-
-<Step number="2" title="Create a team and a user" src="/img/demo-2-team-user.jpg" alt="Create a team and user" flip>
-
-FastGateway is multi-tenant: **teams** own access to projects, and **users** belong to teams. As the admin, set up one of each (under *Admin → IAM* in the sidebar).
-
-1. Open **Teams** and click **Create Team** — give it a name (e.g. `platform`) and an optional description.
-2. Open **Users** and add a user with a username and password.
-3. Add that user to the `platform` team.
+1. Open Projects and click New Project.
+2. Enter a name like `demo`.
+3. Under Connection Type, pick In-Cluster (Local). Nothing else to configure.
+4. Click Create Project.
 
 </Step>
 
-<Step number="3" title="Create a self-signed issuer and assign it to the project" src="/img/demo-3-issuer.jpg" alt="Create a self-signed certificate issuer">
+<Step number="2" title="Create a team and user" src="/img/demo-2-team-user.jpg" alt="Create a team and user" flip>
 
-Certificates are signed by an **issuer** (backed by cert-manager). For the demo, a **self-signed CA** is enough to get TLS working end to end without an external CA.
+Teams own access to projects, and users belong to teams.
 
-1. Open **Issuers** (under *Certificate*) and click **New Issuer**.
-2. Keep the **Issuer Type** as **Self-signed CA**, then set a **Name** (e.g. `selfsigned`) and a **Common Name** (e.g. `demo-ca`). Leave the RSA / 2048 / 3650-day defaults and click **Create Issuer**.
-3. On the issuer's page, under **Grant Project Access**, select your `demo` project and click **Grant** — now the project is allowed to issue certificates from this issuer.
+1. Open Teams and click Create Team. Name it `platform`.
+2. Open Users and add a user with a username and password.
+3. Add the user to the `platform` team.
+
+</Step>
+
+<Step number="3" title="Create a self-signed issuer" src="/img/demo-3-issuer.jpg" alt="Create a self-signed certificate issuer">
+
+An issuer signs TLS certificates. A self-signed CA is enough for the demo.
+
+1. Open Issuers and click New Issuer.
+2. Keep the type Self-signed CA. Set a name like `selfsigned` and a common name like `demo-ca`, then click Create Issuer.
+3. On the issuer page, under Grant Project Access, select `demo` and click Grant.
 
 </Step>
 
 <Step number="4" title="Onboard the team to the project" src="/img/demo-4-onboard-team.jpg" alt="Grant the team access to the project" flip>
 
-Projects aren't visible to a team until they're granted access. Onboard the `platform` team to the `demo` project so its members can manage domains and routes.
+A team has to be assigned to a project before it can use it.
 
-1. Open your `demo` project and go to its **Teams** tab (**Project Teams**).
-2. Click **Assign Team** and select `platform`.
-3. Pick a **Permission Preset** — e.g. **Editor**, which can create and edit domains, routes, clients, and certificates — then click **Assign Team**.
+1. Open the `demo` project and go to its Teams tab.
+2. Click Assign Team and select `platform`.
+3. Pick a permission preset like Editor, then click Assign Team.
 
 </Step>
 
 <Step number="5" title="Create a domain template" src="/img/demo-5-template.jpg" alt="Create a domain template">
 
-A **domain template** captures the reusable infrastructure settings every domain shares — controller, service type, TLS, autoscaling, and compute resources — so you configure them once.
+A domain template holds the settings your domains share, so you set them once.
 
-1. In your `demo` project, open **Domain Templates** and click **Create Template**.
-2. Give it a **Name** (e.g. `default`).
-3. Pick a **Controller** (Envoy Gateway), a **Service Type** (LoadBalancer), and a **TLS** mode (TLS Only). Autoscaling, observability, and compute resources live under *Advanced Settings*.
-4. Click **Create Template**.
+1. In the `demo` project, open Domain Templates and click Create Template.
+2. Give it a name like `default`.
+3. Pick a controller (Envoy Gateway), a service type (LoadBalancer), and a TLS mode (TLS Only).
+4. Click Create Template.
 
 </Step>
 
-<Step number="6" title="Set up the TLS certificate" src="/img/demo-6-certificate.jpg" alt="The All Certificates page, where managed certificates are tracked" flip>
+<Step number="6" title="Set up the TLS certificate" src="/img/demo-6-certificate.jpg" alt="The All Certificates page" flip>
 
-FastGateway terminates HTTPS with a Kubernetes **TLS secret** that's signed by the self-signed issuer you granted in step 3 — there's no certificate file to upload by hand. Every managed certificate across your projects is listed under **All Certificates**.
+FastGateway secures HTTPS with a Kubernetes TLS secret, signed by the issuer you granted in step 3. There is no file to upload.
 
-1. Open **All Certificates** (under *Certificate*) to see where issued certificates appear. It's empty on a fresh instance and fills in as HTTPS domains come online.
-2. Decide on the **secret name** your domain will use (e.g. `demo-tls`) — you'll point the domain at it in the next step.
-3. Because the `selfsigned` issuer is granted to your project, FastGateway can sign this certificate for you, no external CA required.
+1. Open All Certificates to see where issued certificates appear. It fills in as HTTPS domains come online.
+2. Choose a secret name for your domain, like `demo-tls`. You reference it in the next step.
 
 </Step>
 
 <Step number="7" title="Create a domain" src="/img/demo-7-domain.jpg" alt="Create a domain">
 
-A **domain** ties a hostname to a template and a TLS secret, and provisions the Gateway listener.
+A domain ties a hostname to a template and a TLS secret.
 
-1. In your `demo` project open **Domains** and click **New Domain**.
-2. Choose the **Domain Template** `default` — its settings (LoadBalancer, TLS Only, port 443) are shown for confirmation.
-3. Enter a **Display Name** and the **Hostname** (e.g. `demo.example.com`).
-4. Set the **TLS Secret Name** (e.g. `demo-tls`) — the certificate from step 6. You can also tick *Automatically create the DNS record* once you've registered a hosted zone.
-5. Click **Create Domain** — FastGateway provisions the Gateway listener for your hostname.
+1. In the `demo` project, open Domains and click New Domain.
+2. Choose the `default` template.
+3. Enter a display name and a hostname like `demo.example.com`.
+4. Set the TLS Secret Name to `demo-tls`.
+5. Click Create Domain.
 
 </Step>
 
 <Step number="8" title="Create a route" src="/img/demo-8-route.jpg" alt="Create a route" flip>
 
-Finally, add a **route** that forwards matching traffic on your domain to a backend.
+A route forwards matching traffic on your domain to a backend.
 
-1. Open your domain and click **New Route**.
-2. On **Basic Info**, give the route a **name** (e.g. `demo-route`).
-3. On **Traffic**, keep **Forward to Backend** and add a **backend** — a Kubernetes Service (namespace, service, port) or an external service. Add more backends to split traffic by weight.
-4. The **Extensions** and **Security** tabs add header rewrites, redirects, CORS, API keys, JWT, and more — all optional.
-5. Click **Create**. The change runs through the project's approval workflow, then FastGateway renders the `HTTPRoute` and your domain is serving traffic.
-
-:::note
-You create routes as a member of a team assigned to the project — that's why step 4 onboarded the `platform` team.
-:::
+1. Open your domain and click New Route.
+2. On Basic Info, name the route `demo-route`.
+3. On Traffic, keep Forward to Backend and add a backend service (namespace, service, port).
+4. Click Create. The change goes through approval, then your domain serves traffic.
 
 </Step>
 
-## What you just built
+## What you built
 
-You now have a complete path from request to backend: an in-cluster **project**, a **team** with access, a self-signed **issuer**, a **domain template**, a **TLS secret**, a **domain**, and a **route**. This is the same flow you'd follow on a real cluster — see [Getting Started](/docs/getting-started/installation) to run FastGateway yourself, or the [Concepts](/docs/concepts/projects) for how each piece fits together.
+You now have a full path from request to backend: a project, a team, an issuer, a domain template, a TLS secret, a domain, and a route. The same flow works on a real cluster. See [Getting Started](/docs/getting-started/installation) to run FastGateway yourself, or [Concepts](/docs/concepts/projects) for how the pieces fit.
