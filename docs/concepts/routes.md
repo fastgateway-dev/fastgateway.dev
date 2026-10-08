@@ -31,17 +31,14 @@ Routes match incoming requests using:
 
 ## Backend Configuration
 
-Each route specifies one or more backends:
+On the route builder's Traffic tab, a route forwards to one or more backends. Each backend is a Kubernetes Service (namespace, service, port) or an external service (address, port). Add more than one backend to split traffic by weight, or mark a backend as a fallback so it only takes traffic when the primaries are unhealthy.
 
-```yaml
-backends:
-  - type: kubernetes
-    service: api-service
-    namespace: production
-    port: 8080
-    weight: 100
-    fallback: false
-```
+| Field | Description |
+|-------|-------------|
+| Backend type | Kubernetes Service, or External Service |
+| Service / Port | The target service and port (plus namespace for Kubernetes services) |
+| Weight | Share of traffic (0 to 100) when splitting across backends |
+| Role | Primary, or Fallback for failover |
 
 ## Approval Workflow
 

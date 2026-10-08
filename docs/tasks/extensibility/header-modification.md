@@ -5,49 +5,32 @@ description: Modify request and response headers using set, add, and remove oper
 
 # Header Modification
 
-FastGateway supports modifying HTTP headers on both requests and responses.
-`requestHeaderModifier` and `responseHeaderModifier` are top-level settings on
-the route (configured on the Traffic tab).
+FastGateway can add, overwrite, or strip HTTP headers on both requests and
+responses. You configure this in the route builder, with no YAML to write.
 
-## Request Header Modification
+## Where to configure
 
-Modify headers before forwarding to backend:
+In the route builder, open the **Traffic** tab and expand the **Header Modifiers**
+section. It has two groups:
 
-```yaml
-requestHeaderModifier:
-  set:
-    - name: "X-Custom-Header"
-      value: "custom-value"
-  add:
-    - name: "X-Request-ID"
-      value: "%REQ_ID%"
-  remove:
-    - "X-Internal-Header"
-```
+- **Request Headers** change headers before the request is forwarded to the backend.
+- **Response Headers** change headers on the response sent back to the client.
 
-## Response Header Modification
+Click **Add** in either group to create a row. Each row has three parts:
 
-Modify headers in the response to clients:
+1. An operation: **Set**, **Add**, or **Remove**.
+2. The header name (for example `X-Custom-Header`).
+3. The header value (hidden for **Remove**, since the header is just dropped).
 
-```yaml
-responseHeaderModifier:
-  set:
-    - name: "X-Frame-Options"
-      value: "DENY"
-  add:
-    - name: "X-Response-Time"
-      value: "%RESPONSE_TIME%"
-  remove:
-    - "Server"
-```
+Add as many rows as you need, then save the route.
 
 ## Operations
 
 | Operation | Description |
 |-----------|-------------|
-| **set** | Sets header value, replacing any existing value |
-| **add** | Adds header value, preserving existing values |
-| **remove** | Removes header completely |
+| **Set** | Sets the header value, overwriting any existing value |
+| **Add** | Adds the header value, appending to any existing values |
+| **Remove** | Removes the header completely |
 
 ## Common Use Cases
 
@@ -55,3 +38,7 @@ responseHeaderModifier:
 - Remove sensitive headers (Server, X-Powered-By)
 - Set security headers (X-Frame-Options, X-Content-Type-Options)
 - Add authentication context headers
+
+After saving, the change goes through the approval workflow and is then deployed.
+
+The REST API equivalent is documented in the [API Reference](/docs/reference/api-reference).

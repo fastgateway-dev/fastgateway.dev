@@ -5,53 +5,28 @@ description: Configure primary and fallback backends for automatic failover
 
 # Failover
 
-Failover ensures high availability by routing traffic to healthy backends when primary backends become unavailable.
+Failover ensures high availability by routing traffic to a fallback backend when the primary backends become unavailable.
 
-## Primary/Fallback Configuration
+## Primary and Fallback Backends
 
-Mark a backend as a fallback with `fallback: true`. Fallback backends receive
-traffic only when the primary (non-fallback) backends are unhealthy:
+In the route builder, open the **Traffic** tab and set the **Route Type** to **Forward to Backend**. Under **Backend Services**, add your primary backend and leave its **Role** set to **Primary**. Add another backend and set its **Role** to **Fallback**.
 
-```yaml
-backends:
-  - type: kubernetes
-    service: "api-primary"
-    namespace: "default"
-    port: 8080
-  - type: kubernetes
-    service: "api-fallback"
-    namespace: "default"
-    port: 8080
-    fallback: true
-```
+A fallback backend receives traffic only when all primary backends are unhealthy. Its weight is set to 0 automatically, so weights do not apply to it. Fallback requires passive health checks to be enabled so the gateway can detect when primaries are unhealthy.
 
-The `fallback` flag is a dedicated boolean on the backend. Weights are ignored
-for fallback backends.
+## Health Checks
 
-## Health Checks for Automatic Failover
+Expand the **Backend Traffic Policy** section and enable **Health Checks** so the gateway can detect and route around unhealthy backends.
 
-Enable health checks to automatically detect and remove unhealthy backends:
-
-```yaml
-backendTrafficPolicy:
-  healthCheck:
-    active:
-      type: "HTTP"
-      http:
-        path: "/health"
-        expectedStatuses:
-          - 200
-      interval: "10s"
-      timeout: "5s"
-      unhealthyThreshold: 3
-      healthyThreshold: 2
-```
+- **Active** health checks probe the backend on an interval. For HTTP, set the probe **Path**, the **Expected Status Codes**, the check **Interval**, and the **Timeout**.
+- **Passive** health checks observe live traffic and remove a backend after a number of **Consecutive Gateway Errors** or **Consecutive 5xx Errors**. Passive checks are what drive failover to a fallback backend.
 
 ## How Failover Works
 
-1. Health checks run at configured intervals
-2. Backend marked unhealthy after `unhealthyThreshold` failures
-3. Traffic automatically routes to healthy backends
-4. Backend restored after `healthyThreshold` successes
+1. Health checks run against each backend
+2. A backend is marked unhealthy after the configured error threshold
+3. Traffic shifts to healthy backends, or to the fallback backend when all primaries are unhealthy
+4. The backend is restored once it is healthy again
 
-Combine with circuit breakers for comprehensive resilience.
+Combine this with circuit breakers for comprehensive resilience.
+
+The REST API equivalent is documented in the [API Reference](/docs/reference/api-reference).

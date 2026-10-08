@@ -13,47 +13,11 @@ Rate limiting requires:
 - **Redis**: Backend storage for rate limit counters
 - **Envoy Gateway Rate Limit Service**: Deployed and configured
 
-## Configuration
+The route builder flags whether rate limiting is available for your project.
 
-```yaml
-backendTrafficPolicy:
-  rateLimit:
-    global:
-      rules:
-        - limit:
-            requests: 100
-            unit: "Minute"
-          clientSelectors:
-            - sourceCIDR:
-                value: "0.0.0.0/0"
-                type: "Exact"
-```
+## Configure
 
-## Selectors
-
-Rate limit by different criteria:
-
-| Selector | Description |
-|----------|-------------|
-| **sourceCIDR** | Client IP/CIDR range (object with `value` and `type`: `Exact` or `Distinct`) |
-| **headers** | Request header values |
-| **path** | Request path |
-| **methods** | HTTP methods |
-
-### Header-based Rate Limiting
-
-```yaml
-clientSelectors:
-  - headers:
-      - name: "X-API-Key"
-        type: "Distinct"
-```
-
-## Rate Limit Response
-
-When limits are exceeded, clients receive:
-- **Status Code**: 429 Too Many Requests
-- **Headers**: Rate limit information
+In the route builder, open the **Traffic** tab and expand the **Backend Traffic Policy** section. Under **Rate Limiting**, turn on **Enable Rate Limiting**, then set **Requests** to the allowed count and **Per** to the time window, for example `100` requests per `Minute`.
 
 ## Units
 
@@ -63,3 +27,24 @@ When limits are exceeded, clients receive:
 | **Minute** | Requests per minute |
 | **Hour** | Requests per hour |
 | **Day** | Requests per day |
+
+## Client Selectors
+
+By default the limit applies to all matched traffic. To scope it, click **Show Client Selectors (Advanced)** and **Add Selector**. Multiple selectors are OR'd together.
+
+| Selector | Description |
+|----------|-------------|
+| **Headers** | Match a header by **Name** and optional **Value**, with **Type** **Exact** or **Distinct** |
+| **Source CIDR** | Match a client IP or CIDR range, with **Type** **Exact** or **Distinct** |
+| **Path Match** | Match a request path, with **Type** **Exact**, **PathPrefix**, or **RegularExpression** |
+| **HTTP Methods** | Match one or more methods, for example `GET, POST, PUT` |
+
+Use **Distinct** to apply a separate limit to each unique value, for example a per-API-key limit via a **Distinct** header selector on `X-API-Key`.
+
+## Rate Limit Response
+
+When limits are exceeded, clients receive:
+- **Status Code**: 429 Too Many Requests
+- **Headers**: Rate limit information
+
+The REST API equivalent is documented in the [API Reference](/docs/reference/api-reference).

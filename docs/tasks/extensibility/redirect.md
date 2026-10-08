@@ -5,70 +5,34 @@ description: Configure HTTP redirects with path, scheme, and host modifications
 
 # Redirect
 
-FastGateway supports HTTP redirects to route clients to different URLs without backend processing.
+FastGateway can return an HTTP redirect so clients are sent to a different URL
+without any backend processing. You configure this in the route builder, with no
+YAML to write.
 
-Redirect is a route type selected on the Traffic tab (`routeType: redirect`), not
-a Gateway-API filter. The redirect options live under the `redirect` object.
+## Where to configure
 
-## Basic Redirect
+In the route builder, open the **Traffic** tab. Under **Route Type & Backend**,
+set **Route Type** to **HTTP Redirect**. A **Redirect Configuration** section
+appears with these fields:
 
-Redirect to a different path:
+- **Scheme** sets the target scheme: **No change**, **HTTPS**, or **HTTP**. Use
+  HTTPS to force an HTTP-to-HTTPS redirect.
+- **Status Code** selects the redirect code (see below).
+- **Hostname** sets the target host. Leave empty to keep the original hostname.
+- **Port** sets the target port. Leave empty to use the default port for the scheme.
+- **Rewrite Path** (optional) replaces the path. Choose **Replace Prefix Match**
+  with a new prefix, or **Replace Full Path** with a new full path.
 
-```yaml
-routeType: redirect
-redirect:
-  path:
-    type: "ReplaceFullPath"
-    replaceFullPath: "/new-location"
-  statusCode: 301
-```
-
-## Scheme Redirect (HTTP to HTTPS)
-
-Force HTTPS:
-
-```yaml
-routeType: redirect
-redirect:
-  scheme: "https"
-  statusCode: 301
-```
-
-## Host Redirect
-
-Redirect to a different host:
-
-```yaml
-routeType: redirect
-redirect:
-  hostname: "new-domain.com"
-  statusCode: 302
-```
-
-## Full Redirect Example
-
-Combine multiple redirect options:
-
-```yaml
-routeType: redirect
-redirect:
-  scheme: "https"
-  hostname: "api.example.com"
-  path:
-    type: "ReplacePrefixMatch"
-    replacePrefixMatch: "/v2"
-  port: 443
-  statusCode: 302
-```
+A live preview shows the resulting redirect URL. Save the route when done.
 
 ## Status Codes
 
-Only `301` and `302` are supported (`302` is the default).
+Only 301 and 302 are available. The dropdown starts on 301.
 
-| Code | Description |
-|------|-------------|
-| **301** | Permanent redirect (cacheable) |
-| **302** | Temporary redirect (not cached, default) |
+| Code | Label | Description |
+|------|-------|-------------|
+| **301** | Permanent Redirect | Cacheable, permanent move |
+| **302** | Temporary Redirect | Not cached, temporary move |
 
 ## Use Cases
 
@@ -76,3 +40,7 @@ Only `301` and `302` are supported (`302` is the default).
 - Domain consolidation
 - API version deprecation
 - URL shortening
+
+After saving, the change goes through the approval workflow and is then deployed.
+
+The REST API equivalent is documented in the [API Reference](/docs/reference/api-reference).

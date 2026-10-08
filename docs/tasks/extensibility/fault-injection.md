@@ -5,73 +5,60 @@ description: Test service resilience by injecting delays and aborts
 
 # Fault Injection
 
-FastGateway supports fault injection to test service resilience and failure handling.
+FastGateway can inject faults into a route to test how your service handles
+latency and errors. You configure this in the route builder, with no YAML to write.
+It is part of the backend traffic policy, not a separate filter.
 
 :::warning Non-Production Only
-Fault injection should only be used in testing and staging environments. Never enable fault injection in production.
+Fault injection should only be used in testing and staging environments. Never
+enable fault injection in production.
 :::
 
-## Delay Injection
+## Where to configure
 
-Inject latency to test timeout handling:
+Fault injection applies to **Forward to Backend** routes. In the route builder,
+open the **Traffic** tab and expand the **Fault Injection** section, then check
+**Enable Fault Injection**. You can enable delay, abort, or both.
 
-```yaml
-backendTrafficPolicy:
-  faultInjection:
-    delay:
-      fixedDelay: "5s"
-      percentage: 50
-```
+### Delay Injection
 
-This adds a 5-second delay to 50% of requests.
+Check **Enable Delay Injection**, then set:
 
-## Abort Injection
+- **Fixed Delay**: the latency to add, as a duration (for example `2s` or `500ms`).
+- **Percentage**: the share of requests to delay, from 0 to 100. Defaults to 100.
 
-Inject errors to test failure handling:
+### Abort Injection
 
-```yaml
-backendTrafficPolicy:
-  faultInjection:
-    abort:
-      httpStatus: 503
-      percentage: 10
-```
+Check **Enable Abort Injection**, then set:
 
-This returns a 503 error for 10% of requests.
+- **Error Type**: **HTTP** or **gRPC**.
+- **HTTP Status Code** (for HTTP) or **gRPC Status Code** (for gRPC): the error to return.
+- **Percentage**: the share of requests to abort, from 0 to 100. Defaults to 100.
 
-## Combined Fault Injection
-
-Inject both delays and aborts:
-
-```yaml
-backendTrafficPolicy:
-  faultInjection:
-    delay:
-      fixedDelay: "2s"
-      percentage: 30
-    abort:
-      httpStatus: 500
-      percentage: 5
-```
+Save the route when done.
 
 ## Configuration Options
 
 | Option | Description |
 |--------|-------------|
-| **fixedDelay** | Duration of injected delay |
-| **httpStatus** | HTTP status code for aborts |
-| **percentage** | Percentage of requests affected (0-100) |
+| **Fixed Delay** | Duration of the injected delay (for example `5s`) |
+| **HTTP Status Code** | HTTP status returned for aborts (for example `503`) |
+| **Percentage** | Share of requests affected, 0 to 100 |
 
 ## Testing Scenarios
 
-- **Circuit breaker testing**: Inject 503 errors to trigger circuit breakers
-- **Timeout validation**: Inject delays longer than configured timeouts
-- **Retry logic testing**: Inject intermittent failures
-- **Graceful degradation**: Verify fallback behavior under failures
+- **Circuit breaker testing**: inject 503 errors to trigger circuit breakers
+- **Timeout validation**: inject delays longer than configured timeouts
+- **Retry logic testing**: inject intermittent failures
+- **Graceful degradation**: verify fallback behavior under failures
 
 ## Best Practices
 
-- Start with low percentages (1-5%)
-- Use specific route matches to target specific endpoints
+- Start with low percentages (1 to 5 percent)
+- Use a specific route match to target specific endpoints
 - Monitor metrics during fault injection tests
 - Document expected behavior before testing
+
+After saving, the change goes through the approval workflow and is then deployed.
+
+The REST API equivalent is documented in the [API Reference](/docs/reference/api-reference).

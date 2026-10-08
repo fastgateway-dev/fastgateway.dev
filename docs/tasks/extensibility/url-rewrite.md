@@ -5,55 +5,48 @@ description: Rewrite URL paths using prefix replacement or full path replacement
 
 # URL Rewrite
 
-FastGateway supports URL rewriting to modify the request path before forwarding
-to backends. `urlRewrite` is a top-level setting on the route (configured on the
-Traffic tab).
+FastGateway can rewrite the request path and hostname before forwarding to a
+backend. You configure this in the route builder, with no YAML to write.
 
-## Path Prefix Replacement
+URL rewrite applies to **Forward to Backend** routes. It is not available for
+HTTP Redirect, Direct Response, or gRPC routes.
 
-Replace a path prefix with a different value:
+## Where to configure
 
-```yaml
-urlRewrite:
-  path:
-    type: "ReplacePrefixMatch"
-    replacePrefixMatch: "/v2"
-```
+In the route builder, open the **Traffic** tab and expand the **URL Rewrite**
+section. There are two independent toggles.
 
-This rewrites `/api/v1/users` to `/v2/users` when matched with prefix `/api/v1`.
+### Rewrite Path
 
-## Full Path Replacement
+Check **Rewrite Path**, then choose a **Rewrite Type**:
 
-Replace the entire path:
+- **Replace Prefix Match** replaces only the matched path prefix, then set **New
+  Prefix** (for example `/v2`). This rewrites `/api/v1/users` to `/v2/users` when
+  the route matches the prefix `/api/v1`. Prefix replacement only works when the
+  route's path match type is Prefix.
+- **Replace Full Path** replaces the entire path, then set **New Path** (for
+  example `/new/path`).
 
-```yaml
-urlRewrite:
-  path:
-    type: "ReplaceFullPath"
-    replaceFullPath: "/new-endpoint"
-```
+### Rewrite Hostname
 
-## Hostname Rewrite
+Check **Rewrite Hostname**, then set **New Hostname** (for example
+`api.internal.example.com`). This changes the Host header sent to the backend.
 
-Optionally rewrite the Host header:
-
-```yaml
-urlRewrite:
-  hostname: "internal-service.local"
-  path:
-    type: "ReplacePrefixMatch"
-    replacePrefixMatch: "/"
-```
+A live preview shows the before and after URL as you type. Save the route when done.
 
 ## Rewrite Types
 
 | Type | Description |
 |------|-------------|
-| **ReplacePrefixMatch** | Replaces the matched prefix portion |
-| **ReplaceFullPath** | Replaces the entire path |
+| **Replace Prefix Match** | Replaces the matched prefix portion (Prefix path match only) |
+| **Replace Full Path** | Replaces the entire path |
 
 ## Use Cases
 
 - Version migration: rewrite `/v1` to `/v2`
 - Path normalization: strip API gateway prefixes
 - Backend routing: map external paths to internal endpoints
+
+After saving, the change goes through the approval workflow and is then deployed.
+
+The REST API equivalent is documented in the [API Reference](/docs/reference/api-reference).

@@ -21,6 +21,7 @@ const sidebars: SidebarsConfig = {
         'concepts/projects',
         'concepts/domain-templates',
         'concepts/domains',
+        'concepts/certificates',
         'concepts/dns-management',
         'concepts/routes',
         'concepts/clients',
@@ -77,7 +78,6 @@ const sidebars: SidebarsConfig = {
       items: [
         'reference/api-reference',
         'reference/rbac-configuration',
-        'reference/environment-vars',
         'reference/troubleshooting',
       ],
     },

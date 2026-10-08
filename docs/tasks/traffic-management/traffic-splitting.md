@@ -9,50 +9,27 @@ Traffic splitting enables gradual rollouts, canary deployments, and blue-green r
 
 ## Use Cases
 
-- **Canary Deployments**: Send small percentage to new version
+- **Canary Deployments**: Send a small percentage to a new version
 - **Blue-Green**: Switch between production environments
 - **A/B Testing**: Route traffic to different variants
 
 ## Weighted Backends
 
-Configure multiple backends with weight distribution:
+In the route builder, open the **Traffic** tab and set the **Route Type** to **Forward to Backend**. Under **Backend Services**, add two or more backends. For each backend, keep the **Role** set to **Primary** and set its **Weight** between 0 and 100. The weights across primary backends should total 100%.
 
-```yaml
-backends:
-  - type: kubernetes
-    service: "api-v1"
-    namespace: "default"
-    port: 8080
-    weight: 90
-  - type: kubernetes
-    service: "api-v2"
-    namespace: "default"
-    port: 8080
-    weight: 10
-```
-
-Weights range from 0 to 100. In this example:
+For example, add `api-v1` with **Weight** `90` and `api-v2` with **Weight** `10`:
 - 90% of traffic goes to stable (v1)
 - 10% of traffic goes to canary (v2)
 
-Backends can also be external services. An external backend uses `type: external`
-with `address`, `addressType` (`fqdn` or `ip`), and `port` instead of
-`service`/`namespace`:
-
-```yaml
-backends:
-  - type: external
-    address: "api.external.example.com"
-    addressType: fqdn
-    port: 443
-    weight: 100
-```
+Each backend can be a **Kubernetes Service** (select the namespace, service, and port) or an **External Service**. For an external backend, set the **Backend Type** to **External Service**, choose the **Address Type** (**FQDN** or **IP Address**), and enter the **Address** and **Port**.
 
 ## Gradual Rollout Strategy
 
-1. Start with 1-5% to canary
+1. Start with 1-5% to the canary
 2. Monitor error rates and latency
-3. Increase weight incrementally (10%, 25%, 50%)
-4. Complete rollout at 100%
+3. Increase the weight incrementally (10%, 25%, 50%)
+4. Complete the rollout at 100%
 
-Combine with health checks to automatically remove unhealthy backends from rotation.
+Enable **Health Checks** in the **Backend Traffic Policy** section to automatically remove unhealthy backends from rotation.
+
+The REST API equivalent is documented in the [API Reference](/docs/reference/api-reference).

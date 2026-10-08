@@ -105,39 +105,16 @@ Each stage has:
 
 When a project is created, these default policies are seeded:
 
-### Route Approvals (Single Stage)
+### Route approvals (single stage)
 
-```json
-[
-  {
-    "order": 1,
-    "required_permission": "route.approve",
-    "team_scope": "any"
-  }
-]
-```
+Route changes need one approval from any user with the `route.approve` permission (team scope `any`).
 
-Any user with `route.approve` permission can approve route changes.
+### Client attachment approvals (two stages)
 
-### Client Attachment Approvals (Dual Stage)
+Client attachments need two sequential approvals:
 
-```json
-[
-  {
-    "order": 1,
-    "required_permission": "client.approve",
-    "team_scope": "other_team"
-  },
-  {
-    "order": 2,
-    "required_permission": "client.approve",
-    "team_scope": "any"
-  }
-]
-```
-
-1. **Stage 1**: A member from a different team must approve (cross-team validation)
-2. **Stage 2**: Any approver finalizes the request
+1. A member from a different team than the submitter approves (team scope `other_team`), for cross-team validation.
+2. Any user with `client.approve` finalizes the request (team scope `any`).
 
 ## Approval Rules
 

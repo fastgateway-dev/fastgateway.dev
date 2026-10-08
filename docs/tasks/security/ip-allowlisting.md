@@ -5,36 +5,22 @@ description: Configure IP-based access control using allowlisting
 
 # IP Allowlisting
 
-FastGateway supports IP-based access control in two modes: General and Client.
+FastGateway supports IP-based access control in two modes: General and Client. You pick the mode with the **Security Mode** toggle at the top of the route builder's **Security** tab.
 
 ## General Mode
 
-In general mode, IP rules are defined directly on the route and apply to all traffic.
+In **General (Recommended)** mode, IP rules are defined directly on the route and apply to all traffic.
 
-```yaml
-authorization:
-  allowedCIDRs:
-    - "10.0.0.0/8"
-    - "192.168.1.0/24"
-    - "203.0.113.50/32"
-```
+1. In the route builder, open the **Security** tab and keep **General** mode.
+2. Expand **IP Allowlisting** and check **Enable IP Allowlisting**.
+3. Under **Allowed CIDRs**, type a CIDR range and click **Add**. Repeat for each range.
+4. Submit the route for approval. Once approved, the change deploys.
 
-Alternatively, provide `ipAllowlist` entries, each with an optional description:
-
-```yaml
-ipAllowlist:
-  - cidr: "10.0.0.0/8"
-    description: "Corporate network"
-  - cidr: "203.0.113.50/32"
-    description: "Office gateway"
-```
+Requests from any address outside the allowlist receive `403 Forbidden`.
 
 ## Client Mode
 
-In client mode, each client has its own IP allowlist. Clients are attached to
-routes and traffic is validated against their specific CIDR entries. A client's
-IPs are managed as individual CIDR entries (see
-[Client Management](./client-management)) rather than an inline list on the route.
+In **Client-Based** mode, each client has its own IP allowlist. You attach clients to the route and traffic is validated against the CIDR entries configured on each client. A client's IPs are managed as individual CIDR entries on the client (see [Client Management](./client-management)) rather than entered on the route. Route-level IP allowlisting is not used in client mode.
 
 ## CIDR Notation
 
@@ -47,6 +33,8 @@ IPs are managed as individual CIDR entries (see
 
 ## Mode Selection
 
-- Use **General mode** for simple, route-wide IP restrictions
-- Use **Client mode** when different clients need different IP allowlists
-- General and Client modes are mutually exclusive on a route
+- Use **General mode** for simple, route-wide IP restrictions.
+- Use **Client mode** when different clients need different IP allowlists.
+- General and Client modes are mutually exclusive on a route.
+
+The REST API equivalent is documented in the [API Reference](/docs/reference/api-reference).

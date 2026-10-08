@@ -1,115 +1,100 @@
 ---
 sidebar_position: 6
-description: Configure gateway-level settings including keepalive, connection limits, timeouts, HTTP/3, and TLS
+description: Configure domain-level settings including keepalive, connection limits, timeouts, HTTP/3, and TLS
 ---
 
 # Domain Settings
 
-FastGateway supports gateway-level domain settings for connection management and protocol configuration.
+Domain settings apply to every route on a domain. They are not part of the route
+builder. Open a domain, then open its **Settings** tab. You configure everything
+in the UI, with no YAML to write.
 
-## TCP Keepalive
+The Settings tab groups options under **Client Settings**. Expand the sections
+below to configure them.
 
-Configure TCP keepalive to detect dead connections:
+## Client Connection
 
-```yaml
-domainSettings:
-  clientConnection:
-    tcpKeepalive:
-      probes: 3
-      idleTime: "60s"
-      interval: "10s"
-```
+### TCP Keepalive
 
-| Setting | Description |
-|---------|-------------|
-| **probes** | Number of keepalive probes before closing |
-| **idleTime** | Time before sending first keepalive probe |
-| **interval** | Interval between keepalive probes |
+Check **TCP Keepalive** to detect dead connections, then set:
 
-## Connection Limits
+| Field | Description |
+|-------|-------------|
+| **Probes** | Number of keepalive probes before the connection is dropped |
+| **Idle Time** | Time a connection must be idle before probes begin (for example `60s`) |
+| **Interval** | Time between probes (for example `10s`) |
 
-Limit concurrent connections. `connectionLimit` is an object whose numeric field
-is `maxConnections`; `bufferLimit` sits alongside it under `clientConnection`:
+### PROXY Protocol
 
-```yaml
-domainSettings:
-  clientConnection:
-    connectionLimit:
-      maxConnections: 10000
-    bufferLimit: "32Ki"
-```
+Check **PROXY Protocol** to preserve the original client IP when an upstream load
+balancer sends PROXY protocol headers. Only enable this if your load balancer
+actually sends them.
 
-## Timeouts
+### Connection Limits
 
-Configure request and idle timeouts under `timeout.http`:
+Limit concurrent connections and buffering:
 
-```yaml
-domainSettings:
-  timeout:
-    http:
-      requestReceivedTimeout: "30s"
-      idleTimeout: "300s"
-```
+| Field | Description |
+|-------|-------------|
+| **Max Connections** | Maximum concurrent connections |
+| **Close Delay** | Grace period before closing rejected connections |
+| **Max Connection Duration** | Maximum time a connection can stay open |
+| **Max Requests/Connection** | Maximum requests per connection |
+| **Buffer Limit** | Maximum buffer size per connection (for example `32Ki`, `1Mi`) |
 
-| Setting | Description |
-|---------|-------------|
-| **requestReceivedTimeout** | Time to receive complete request headers |
-| **idleTimeout** | Idle connection timeout |
+## Client IP Detection
 
-## HTTP/3 Support
+Set **Detection Method** to control how the real client IP is found when behind
+load balancers or CDNs:
 
-Enable HTTP/3 (QUIC):
+- **None** uses the L4 source IP.
+- **X-Forwarded-For header** reads the IP from `X-Forwarded-For`. Set **Number of
+  Trusted Hops** (1 to 10) to match how many proxies sit in front of the gateway.
+- **Custom header** reads the IP from a header you name (for example
+  `CF-Connecting-IP`). Optionally check **Fail closed** to reject requests when
+  the header is missing.
 
-```yaml
-domainSettings:
-  http3:
-    enabled: true
-```
+## Client Timeout
+
+| Field | Description |
+|-------|-------------|
+| **Request Received Timeout** | Time to receive complete request headers (for example `30s`) |
+| **HTTP Idle Timeout** | Idle connection timeout (for example `60s`) |
+
+## Protocol
+
+Check **Enable HTTP/3 (QUIC)** to turn on HTTP/3. This requires UDP listeners and
+QUIC-capable clients, and TLS must be configured.
 
 ## TLS Settings
 
-Configure TLS options:
+Pick a **Security Profile**:
 
-```yaml
-domainSettings:
-  tls:
-    minVersion: "TLSv1.2"
-    maxVersion: "TLSv1.3"
-    ciphers:
-      - "ECDHE-ECDSA-AES256-GCM-SHA384"
-      - "ECDHE-RSA-AES256-GCM-SHA384"
-    ecdhCurves:
-      - "X25519"
-      - "P-256"
-```
+- **Modern**: TLS 1.3 only.
+- **Intermediate (Recommended)**: TLS 1.2 and up with a strong cipher set.
+- **Compatible**: TLS 1.0 and up for legacy clients (weaker security).
+- **Custom**: set the values yourself.
 
-TLS settings support `minVersion`, `maxVersion`, `ciphers`, `ecdhCurves`, and
-`signatureAlgorithms`.
+With **Custom**, you set **Min TLS Version**, **Max TLS Version**, and
+**Cipher Suites** (comma-separated).
 
-## Complete Example
+| TLS Version | Notes |
+|-------------|-------|
+| **TLS 1.3** | Strongest, used by the Modern profile |
+| **TLS 1.2** | Recommended minimum |
+| **TLS 1.1** | Deprecated |
+| **TLS 1.0** | Deprecated, legacy only |
 
-```yaml
-domainSettings:
-  clientConnection:
-    tcpKeepalive:
-      probes: 3
-      idleTime: "60s"
-      interval: "10s"
-    connectionLimit:
-      maxConnections: 10000
-  timeout:
-    http:
-      requestReceivedTimeout: "30s"
-      idleTimeout: "300s"
-  http3:
-    enabled: true
-  tls:
-    minVersion: "TLSv1.2"
-```
+## Mutual TLS (Client Certificates)
 
-## Notes
+Toggle **Enable mTLS** to require client certificates. When enabled you set:
 
-- Domain settings apply at the gateway/listener level
-- TCP keepalive helps with load balancer health checks
-- Connection limits prevent resource exhaustion
-- HTTP/3 requires TLS to be configured
+- **Certificate Validation Mode**: **Optional** (clients may present a certificate)
+  or **Required** (all clients must present a valid certificate).
+- **CA Certificates**: add the CA certificates used to verify client certificates.
+- Optional SAN and certificate hash whitelists to restrict which client
+  certificates are accepted.
+
+After saving, changes go through the approval workflow and are then deployed.
+
+The REST API equivalent is documented in the [API Reference](/docs/reference/api-reference).

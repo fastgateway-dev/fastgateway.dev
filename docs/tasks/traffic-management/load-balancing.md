@@ -5,45 +5,33 @@ description: Configure load balancing algorithms for distributing traffic
 
 # Load Balancing
 
-FastGateway supports multiple load balancing algorithms through Backend Traffic Policy.
+FastGateway distributes traffic across backend endpoints using a load balancing algorithm you choose in the route builder.
+
+## Configure
+
+In the route builder, open the **Traffic** tab and expand the **Backend Traffic Policy** section. Under **Load Balancer**, pick an algorithm. When you leave it unset, Envoy Gateway defaults to Least Request.
 
 ## Algorithms
 
 | Algorithm | Description |
 |-----------|-------------|
-| **Round Robin** | Distributes requests sequentially (default) |
-| **Least Request** | Routes to backend with fewest active requests |
-| **Random** | Randomly selects a backend |
-| **Consistent Hash** | Routes same clients to same backends |
-
-## Configuration Example
-
-```yaml
-backendTrafficPolicy:
-  loadBalancer:
-    type: "ConsistentHash"
-    consistentHash:
-      type: "Header"
-      header:
-        name: "X-User-ID"
-```
+| **Round Robin** | Distributes requests evenly across all backends in order |
+| **Least Request** | Sends requests to the backend with the fewest active requests |
+| **Random** | Distributes requests randomly across backends |
+| **Consistent Hash** | Routes requests to the same backend based on a hash key |
 
 ## Consistent Hash Options
 
-Maintain session affinity using:
+When you select **Consistent Hash**, choose how the hash key is derived. This maintains session affinity so the same client reaches the same backend.
 
 | Type | Description |
 |------|-------------|
-| **Header** | Hash based on request header value |
-| **Cookie** | Hash based on cookie value |
-| **SourceIP** | Hash based on client IP address |
+| **Source IP** | Hash based on the client IP address |
+| **Header** | Hash based on a specific HTTP header value |
+| **Cookie** | Hash based on a specific cookie value |
 
-```yaml
-consistentHash:
-  type: "Cookie"
-  cookie:
-    name: "session_id"
-    ttl: "3600s"
-```
+For **Header**, enter the header name to hash on. For **Cookie**, enter the cookie name and an optional TTL.
 
-Consistent hashing ensures the same client reaches the same backend, useful for stateful applications and caching efficiency.
+Consistent hashing is useful for stateful applications and caching efficiency.
+
+The REST API equivalent is documented in the [API Reference](/docs/reference/api-reference).

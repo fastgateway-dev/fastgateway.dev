@@ -5,78 +5,24 @@ description: Return static responses without backend forwarding for health check
 
 # Direct Response
 
-FastGateway can return static responses directly without forwarding to backends.
+FastGateway can return a static response directly, without forwarding to any
+backend. You configure this in the route builder, with no YAML to write.
 
-Direct response is a route type selected on the Traffic tab
-(`routeType: directResponse`), not a Gateway-API filter. The `body` is an object
-(`type: Inline` or `ValueRef`), and `contentType` sets the `Content-Type` header
-directly.
+## Where to configure
 
-## Basic Direct Response
+In the route builder, open the **Traffic** tab. Under **Route Type & Backend**,
+set **Route Type** to **Direct Response**. A **Direct Response Configuration**
+section appears with these fields:
 
-Return a simple response:
+- **Status Code** (required): the HTTP status to return, from 100 to 599.
+- **Content Type**: the `Content-Type` header to send. Choose from `text/plain`,
+  `text/html`, `application/json`, or `application/xml`.
+- **Response Body** (optional): the inline body text. The builder shows a live
+  byte count. The body cannot exceed 4096 bytes.
 
-```yaml
-routeType: directResponse
-directResponse:
-  statusCode: 200
-  contentType: "text/plain"
-  body:
-    type: "Inline"
-    inline: "OK"
-```
+Save the route when done.
 
-## Health Check Endpoint
-
-Create a health check endpoint:
-
-```yaml
-matches:
-  - path:
-      type: "Exact"
-      value: "/health"
-routeType: directResponse
-directResponse:
-  statusCode: 200
-  contentType: "application/json"
-  body:
-    type: "Inline"
-    inline: '{"status": "healthy"}'
-```
-
-## Maintenance Page
-
-Return a maintenance response:
-
-```yaml
-routeType: directResponse
-directResponse:
-  statusCode: 503
-  contentType: "application/json"
-  body:
-    type: "Inline"
-    inline: '{"error": "Service temporarily unavailable for maintenance"}'
-```
-
-## Custom Error Pages
-
-Block specific paths with custom responses:
-
-```yaml
-matches:
-  - path:
-      type: "Prefix"
-      value: "/admin"
-routeType: directResponse
-directResponse:
-  statusCode: 403
-  contentType: "application/json"
-  body:
-    type: "Inline"
-    inline: '{"error": "Forbidden"}'
-```
-
-## Use Cases
+## Common Status Codes
 
 | Scenario | Status Code |
 |----------|-------------|
@@ -86,9 +32,16 @@ directResponse:
 | Blocked paths | 403 |
 | Not found pages | 404 |
 
+To target a specific path (for example `/health` or `/admin`), set the route's
+path match on the **Matching** step, then use Direct Response on the Traffic tab.
+
 ## Notes
 
-- No backend is contacted when DirectResponse is used
-- Set the response `Content-Type` directly with the `contentType` field
-- Inline bodies are limited to 4096 bytes
-- Useful for synthetic endpoints that don't need backend logic
+- No backend is contacted when Direct Response is used.
+- The `Content-Type` header is set directly from the Content Type field.
+- The inline body is limited to 4096 bytes.
+- Useful for synthetic endpoints that do not need backend logic.
+
+After saving, the change goes through the approval workflow and is then deployed.
+
+The REST API equivalent is documented in the [API Reference](/docs/reference/api-reference).
