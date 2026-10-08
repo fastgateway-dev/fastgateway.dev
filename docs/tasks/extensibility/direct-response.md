@@ -7,16 +7,23 @@ description: Return static responses without backend forwarding for health check
 
 FastGateway can return static responses directly without forwarding to backends.
 
+Direct response is a route type selected on the Traffic tab
+(`routeType: directResponse`), not a Gateway-API filter. The `body` is an object
+(`type: Inline` or `ValueRef`), and `contentType` sets the `Content-Type` header
+directly.
+
 ## Basic Direct Response
 
 Return a simple response:
 
 ```yaml
-filters:
-  - type: "DirectResponse"
-    directResponse:
-      statusCode: 200
-      body: "OK"
+routeType: directResponse
+directResponse:
+  statusCode: 200
+  contentType: "text/plain"
+  body:
+    type: "Inline"
+    inline: "OK"
 ```
 
 ## Health Check Endpoint
@@ -28,11 +35,13 @@ matches:
   - path:
       type: "Exact"
       value: "/health"
-filters:
-  - type: "DirectResponse"
-    directResponse:
-      statusCode: 200
-      body: '{"status": "healthy"}'
+routeType: directResponse
+directResponse:
+  statusCode: 200
+  contentType: "application/json"
+  body:
+    type: "Inline"
+    inline: '{"status": "healthy"}'
 ```
 
 ## Maintenance Page
@@ -40,11 +49,13 @@ filters:
 Return a maintenance response:
 
 ```yaml
-filters:
-  - type: "DirectResponse"
-    directResponse:
-      statusCode: 503
-      body: '{"error": "Service temporarily unavailable for maintenance"}'
+routeType: directResponse
+directResponse:
+  statusCode: 503
+  contentType: "application/json"
+  body:
+    type: "Inline"
+    inline: '{"error": "Service temporarily unavailable for maintenance"}'
 ```
 
 ## Custom Error Pages
@@ -56,11 +67,13 @@ matches:
   - path:
       type: "Prefix"
       value: "/admin"
-filters:
-  - type: "DirectResponse"
-    directResponse:
-      statusCode: 403
-      body: '{"error": "Forbidden"}'
+routeType: directResponse
+directResponse:
+  statusCode: 403
+  contentType: "application/json"
+  body:
+    type: "Inline"
+    inline: '{"error": "Forbidden"}'
 ```
 
 ## Use Cases
@@ -76,5 +89,6 @@ filters:
 ## Notes
 
 - No backend is contacted when DirectResponse is used
-- Combine with header modification for proper Content-Type
+- Set the response `Content-Type` directly with the `contentType` field
+- Inline bodies are limited to 4096 bytes
 - Useful for synthetic endpoints that don't need backend logic

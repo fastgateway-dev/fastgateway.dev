@@ -11,20 +11,25 @@ FastGateway supports OIDC authentication for browser-based applications. OIDC is
 
 | Setting | Description |
 |---------|-------------|
-| **provider** | OIDC provider discovery URL |
-| **clientID** | OAuth client ID |
-| **clientSecret** | OAuth client secret |
+| **issuer** | OIDC provider discovery URL (issuer) |
+| **clientId** | OAuth client ID |
+| **clientSecretName** | Kubernetes Secret holding the OAuth client secret |
+| **redirectURL** | OAuth callback URL |
+| **logoutPath** | Path that triggers logout |
 | **scopes** | OAuth scopes to request |
 | **cookieDomain** | Domain for session cookies |
 
 ## Configuration Example
 
+The client secret is never inline; it references a Kubernetes Secret by name.
+
 ```yaml
 securityMode: "general"
-oidcAuth:
-  provider: "https://auth.example.com"
-  clientID: "your-client-id"
-  clientSecret: "your-client-secret"
+oidc:
+  issuer: "https://auth.example.com"
+  clientId: "your-client-id"
+  clientSecretName: "oidc-client-secret"
+  redirectURL: "https://app.example.com/oauth2/callback"
   scopes:
     - "openid"
     - "profile"
@@ -34,7 +39,7 @@ oidcAuth:
 
 ## Supported Providers
 
-| Provider | Discovery URL Format |
+| Provider | Issuer URL Format |
 |----------|---------------------|
 | **Auth0** | `https://your-tenant.auth0.com` |
 | **Okta** | `https://your-org.okta.com` |
@@ -45,10 +50,10 @@ oidcAuth:
 ## Auth0 Example
 
 ```yaml
-oidcAuth:
-  provider: "https://myapp.auth0.com"
-  clientID: "abc123"
-  clientSecret: "secret-from-auth0"
+oidc:
+  issuer: "https://myapp.auth0.com"
+  clientId: "abc123"
+  clientSecretName: "auth0-client-secret"
   scopes:
     - "openid"
     - "profile"

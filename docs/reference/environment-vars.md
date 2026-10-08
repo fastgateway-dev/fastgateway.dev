@@ -9,32 +9,48 @@ This document lists all environment variables used by FastGateway components.
 
 ## Backend Environment Variables
 
+The backend builds its PostgreSQL connection string from discrete variables (there is no single `DATABASE_URL` variable).
+
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
-| `DATABASE_URL` | Yes | PostgreSQL connection string | `postgres://user:pass@localhost:5432/fastgateway` |
+| `DATABASE_HOST` | No | PostgreSQL host (default: `localhost`) | `localhost` |
+| `DATABASE_PORT` | No | PostgreSQL port (default: `5432`) | `5432` |
+| `DATABASE_USER` | No | PostgreSQL user (default: `fastgateway`) | `fastgateway` |
+| `DATABASE_PASSWORD` | No | PostgreSQL password (default: `fastgateway`) | `fastgateway` |
+| `DATABASE_NAME` | No | PostgreSQL database name (default: `fastgateway`) | `fastgateway` |
+| `DATABASE_SSLMODE` | No | PostgreSQL SSL mode (default: `disable`) | `require` |
+| `DATABASE_SSLROOTCERT` | No | Path to the SSL root certificate (CA); applied when set | `/certs/ca.crt` |
+| `DATABASE_SSLCERT` | No | Path to the client SSL certificate; applied when set | `/certs/client.crt` |
+| `DATABASE_SSLKEY` | No | Path to the client SSL key; applied when set | `/certs/client.key` |
 | `JWT_SECRET` | Yes | Secret key for JWT token signing (min 32 characters) | `your-super-secret-jwt-key-min-32-chars` |
+| `JWT_EXPIRY` | No | Access token lifetime as a Go duration (default: `24h`) | `24h` |
+| `REFRESH_TOKEN_EXPIRY` | No | Refresh token lifetime as a Go duration (default: `168h`) | `168h` |
 | `ENCRYPTION_KEY` | Yes | Key for encrypting sensitive data (32 characters) | `your-32-character-encryption-key` |
-| `API_PORT` | No | Port for the API server (default: 8080) | `8080` |
+| `API_PORT` | No | Port for the API server (default: `8081`) | `8081` |
+| `LOG_LEVEL` | No | Log level, e.g. `debug` or `info` (default: `info`) | `debug` |
 | `CORS_ALLOWED_ORIGINS` | No | Comma-separated list of allowed CORS origins | `http://localhost:3000,https://app.example.com` |
-| `ADMIN_USERNAME` | Yes | Initial admin username | `admin` |
-| `ADMIN_PASSWORD` | Yes | Initial admin password | `securepassword123` |
-| `ADMIN_EMAIL` | Yes | Initial admin email | `admin@example.com` |
+| `ADMIN_USERNAME` | No | Initial admin username (default: `admin`) | `admin` |
+| `ADMIN_PASSWORD` | No | Initial admin password (default: `admin123`) | `securepassword123` |
+| `ADMIN_EMAIL` | No | Initial admin email (default: `admin@fastgateway.local`) | `admin@example.com` |
+| `WAF_IMAGE` | No | Coraza WAF proxy-wasm image (default: `ghcr.io/corazawaf/coraza-proxy-wasm`) | `ghcr.io/corazawaf/coraza-proxy-wasm` |
+| `WAF_TAG` | No | Coraza WAF image tag (default: `0.6.0`) | `0.6.0` |
+| `WAF_SHA256` | No | Optional SHA256 digest used to pin the WAF image | `sha256:...` |
 
 ### Kubernetes Configuration
 
-| Variable | Required | Description | Example |
-|----------|----------|-------------|---------|
-| `KUBE_CONFIG_PATH` | No | Path to kubeconfig file (for local development) | `~/.kube/config` |
-| `KUBE_CONTEXT` | No | Kubernetes context to use | `my-cluster` |
-| `KUBE_IN_CLUSTER` | No | Set to `true` when running inside Kubernetes | `true` |
-| `KUBE_TOKEN` | No | Service account token for Kubernetes API | `eyJhbGciOi...` |
-| `KUBE_API_SERVER` | No | Kubernetes API server URL | `https://kubernetes.default.svc` |
+Kubernetes connectivity is **not** configured through backend environment variables. Instead, each project stores its own cluster connection in the database, configured through the UI or API. A project connection specifies:
+
+- **Connection type** — `in_cluster`, `kubeconfig`, or `api_token`
+- **API server URL** — the Kubernetes API endpoint (used by `api_token` connections)
+- **Token** — a service account token, stored encrypted (AES-256) using `ENCRYPTION_KEY`
+
+See `internal/models/project.go` and `internal/services/project_service.go` for details.
 
 ## Frontend Environment Variables
 
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
-| `NEXT_PUBLIC_API_URL` | Yes | Backend API URL | `http://localhost:8080` |
+| `NEXT_PUBLIC_API_URL` | Yes | Backend API URL | `http://localhost:8081` |
 
 ## Example .env File
 
@@ -42,33 +58,34 @@ This document lists all environment variables used by FastGateway components.
 
 ```bash
 # Database Configuration
-DATABASE_URL=postgres://fastgateway:password@localhost:5432/fastgateway?sslmode=disable
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=fastgateway
+DATABASE_PASSWORD=fastgateway
+DATABASE_NAME=fastgateway
+DATABASE_SSLMODE=disable
 
 # Security
 JWT_SECRET=your-super-secret-jwt-key-must-be-at-least-32-characters-long
 ENCRYPTION_KEY=your-32-character-encryption-key
 
 # Server Configuration
-API_PORT=8080
+API_PORT=8081
+LOG_LEVEL=info
 CORS_ALLOWED_ORIGINS=http://localhost:3000
 
-# Initial Admin User
+# Initial Admin User (optional — defaults are admin / admin123 / admin@fastgateway.local)
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=changeme123
 ADMIN_EMAIL=admin@example.com
-
-# Kubernetes Configuration (for local development)
-KUBE_CONFIG_PATH=~/.kube/config
-KUBE_CONTEXT=kind-fastgateway
-
-# Kubernetes Configuration (for in-cluster deployment)
-# KUBE_IN_CLUSTER=true
 ```
+
+Kubernetes cluster access is not set here — it is configured per project through the UI or API (see the Kubernetes Configuration section above).
 
 ### Frontend (.env.local)
 
 ```bash
-NEXT_PUBLIC_API_URL=http://localhost:8080
+NEXT_PUBLIC_API_URL=http://localhost:8081
 ```
 
 ## Docker Compose Example
@@ -90,26 +107,28 @@ services:
   backend:
     image: fastgateway/backend:latest
     environment:
-      DATABASE_URL: postgres://fastgateway:password@postgres:5432/fastgateway?sslmode=disable
+      DATABASE_HOST: postgres
+      DATABASE_PORT: "5432"
+      DATABASE_USER: fastgateway
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: fastgateway
+      DATABASE_SSLMODE: disable
       JWT_SECRET: your-super-secret-jwt-key-must-be-at-least-32-characters-long
       ENCRYPTION_KEY: your-32-character-encryption-key
-      API_PORT: "8080"
+      API_PORT: "8081"
       CORS_ALLOWED_ORIGINS: http://localhost:3000
       ADMIN_USERNAME: admin
       ADMIN_PASSWORD: changeme123
       ADMIN_EMAIL: admin@example.com
-      KUBE_CONFIG_PATH: /root/.kube/config
     ports:
-      - "8080:8080"
-    volumes:
-      - ~/.kube:/root/.kube:ro
+      - "8081:8081"
     depends_on:
       - postgres
 
   frontend:
     image: fastgateway/frontend:latest
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8080
+      NEXT_PUBLIC_API_URL: http://localhost:8081
     ports:
       - "3000:3000"
     depends_on:

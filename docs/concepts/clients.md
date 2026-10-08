@@ -6,7 +6,7 @@ description: API consumers and their access credentials
 
 # Clients
 
-Clients represent API consumers in FastGateway, providing identity management for access control through IP addresses and API keys.
+Clients represent API consumers in FastGateway, providing identity management for access control through IP addresses, API keys, JWT, and mTLS.
 
 ## What is a Client?
 
@@ -25,6 +25,8 @@ A client is an entity that consumes your APIs, such as:
 | Team | Owning team responsible for the client |
 | IP Addresses | Allowed source IPs for IP-based filtering |
 | API Keys | Secret keys for API key authentication |
+| JWT | Per-client JWT validation (issuer, JWKS, audiences, claims) |
+| mTLS | Per-client mutual TLS using a CA and SAN/certificate identity |
 
 ## Client Credentials
 
@@ -38,8 +40,23 @@ Allowed IPs:
 ### API Keys
 ```
 API Key: fg_live_abc123...
-Header: X-API-Key
+Header: x-api-key
 ```
+
+### JWT
+```
+Issuer: https://issuer.example.com
+JWKS URL: https://issuer.example.com/.well-known/jwks.json
+Audiences: [api.example.com]
+```
+
+### mTLS
+```
+CA: client-ca
+SAN: spiffe://example.com/client
+```
+
+Requests are routed to a client using a separate client ID header (`x-client-id`), independent of the authentication method.
 
 ## Client Attachments
 

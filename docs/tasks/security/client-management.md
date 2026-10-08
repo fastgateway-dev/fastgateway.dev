@@ -9,40 +9,38 @@ Clients enable per-client security controls including IP allowlisting and API ke
 
 ## Creating Clients
 
-Create a client with optional IP addresses and API key:
+Create a client with its core attributes. IP addresses and API keys are not set
+inline at creation — they are managed separately afterwards (see below):
 
 ```yaml
 client:
   name: "partner-api"
   description: "Partner API integration"
   team: "platform-team"
-  ipAddresses:
-    - "203.0.113.0/24"
-    - "198.51.100.10/32"
-  apiKey: "pk_partner_abc123"
 ```
 
 ## Managing IP Addresses
 
-Add or update IP addresses for a client:
+A client's IPs are managed as individual CIDR entries, each added separately
+(`POST /clients/{clientId}/ips`), with an optional description:
 
 ```yaml
-client:
-  name: "partner-api"
-  ipAddresses:
-    - "203.0.113.0/24"
-    - "198.51.100.0/24"
-    - "10.0.0.0/8"
+# Add a CIDR entry to the client
+cidr: "203.0.113.0/24"
+description: "Partner office network"
 ```
 
 ## Managing API Keys
 
-Set or rotate a client's API key:
+A client's API key is generated server-side (`POST /clients/{clientId}/api-key`).
+The plaintext key is returned only once (prefix `fg_live_`) and is stored hashed —
+it is never set or retrieved inline. Regenerating replaces the existing key.
 
 ```yaml
-client:
-  name: "partner-api"
-  apiKey: "pk_partner_newkey456"
+# Response from generating a client API key (shown only once)
+apiKey: "fg_live_aB3cD4eF5gH6iJ7kL8mN9oP0qR1sT2u"
+prefix: "fg_live_aB3c"
+headerName: "x-api-key"
 ```
 
 ## Attaching Clients to Routes
@@ -55,25 +53,24 @@ attachment:
   route: "api-route"
 ```
 
-## Dual Approval Workflow
+## Approval Workflow
 
-Client attachments require dual approval for security:
+Client attachments use the unified multi-stage approval system. An attachment
+request generates an approval with one or more stages that must be approved in
+order. Each stage approval is submitted via
+`POST /projects/{projectId}/client-approvals/{approvalId}/stages/{stageId}/approve`
+(or the corresponding `/reject`).
 
-| Step | Actor | Action |
-|------|-------|--------|
-| 1 | Submitter | Creates attachment request |
-| 2 | Team Member | Approves with `approve-team` |
-| 3 | Approver | Approves with `approve-approver` |
+Each stage is defined by a required permission and a team scope (`any`,
+`other_team`, or `submitter_team`), and can require more than one approver.
 
 **Rules:**
 - Submitter cannot approve their own attachment
-- For cross-team attachments, team approval must come from a member of the client's team
-- Both approvals required before attachment is active
+- Stages must be approved sequentially
+- The attachment becomes active only after all stages are approved
 
 ## Cross-Team Attachments
 
-When attaching a client to a route owned by a different team:
-
-1. Submitter creates attachment request
-2. Member of the **client's team** provides team approval
-3. Route approver provides final approval
+When attaching a client to a route owned by a different team, configure a stage
+scoped to the client's team so that a member of that team must approve before the
+attachment is activated.

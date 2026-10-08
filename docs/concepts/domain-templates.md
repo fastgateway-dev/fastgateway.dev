@@ -12,16 +12,21 @@ Domain templates define reusable Gateway settings that domains can inherit, ensu
 
 | Property | Description | Options |
 |----------|-------------|---------|
-| Exposure Type | Network accessibility | `public` (internet-facing), `internal` (cluster-only) |
-| Port | Listener port number | Any valid port (typically 80, 443, 8080) |
-| TLS Policy | Certificate handling | `terminate`, `passthrough`, `none` |
+| Exposure Type | Service type for the Gateway | `LoadBalancer` (internet-facing), `ClusterIP` (cluster-only) |
+| HTTP Port | HTTP listener port | Default `80` |
+| HTTPS Port | HTTPS listener port | Default `443` |
+| TLS Mode | Which listeners to create | `tls_only`, `no_tls`, `both` |
+| TLS Policy | Certificate handling | `terminate`, `passthrough` |
 | Annotations | Custom metadata | Key-value pairs for load balancer configuration |
+| Controller Name | GatewayClass controller | Default Envoy Gateway controller |
+| Merge Gateways | Share a single Envoy deployment across Gateways | `true`, `false` |
+| Observability | Access logs, tracing, and metrics | Optional telemetry configuration |
 
 ## How Templates Work
 
 ```mermaid
 flowchart TD
-    T["<b>Domain Template</b><br/>exposure: public<br/>port: 443<br/>tls: terminate"]
+    T["<b>Domain Template</b><br/>exposure: LoadBalancer<br/>httpsPort: 443<br/>tls: terminate"]
     T -->|inherits| A["<b>Domain A</b><br/>api.com"]
     T -->|inherits| B["<b>Domain B</b><br/>app.com"]
 

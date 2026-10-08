@@ -35,10 +35,24 @@ Project credentials are stored securely:
 
 ## Project Administration
 
+Access is controlled at two levels.
+
+**System roles** apply globally:
+
 | Role | Capabilities |
 |------|--------------|
-| Platform Admin | Create/delete projects, manage all settings |
-| Project Admin | Manage domains, templates, and routes within project |
-| Team Member | Submit routes for approval, view configurations |
+| `owner` | Full access across all projects and system settings |
+| `user` | Access governed by team assignments and project-admin grants |
+
+**Project-level access** is granted by assigning teams to a project with one or more permission presets, which map to 24 granular permissions:
+
+| Preset | Capabilities |
+|--------|--------------|
+| Viewer | Read-only access to routes, clients, and domains |
+| Editor | Create and edit routes, clients, and domains |
+| Approver | Review and approve routes and client attachments |
+| Admin | Full project permissions |
+
+Users can also be given explicit **project-admin** assignments for direct administrative access to a specific project.
 
 Projects provide the foundation for organizing your API gateway infrastructure across multiple Kubernetes environments.

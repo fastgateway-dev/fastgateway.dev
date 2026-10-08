@@ -10,7 +10,7 @@ Configure timeouts and retries to handle transient failures and ensure reliable 
 ## Timeout Configuration
 
 ```yaml
-defaultTrafficPolicy:
+backendTrafficPolicy:
   timeout:
     tcp:
       connectTimeout: "10s"
@@ -29,15 +29,23 @@ defaultTrafficPolicy:
 ## Retry Policy
 
 ```yaml
-defaultTrafficPolicy:
+backendTrafficPolicy:
   retry:
-    numRetries: 3
-    perTryTimeout: "5s"
+    numRetries: 2
+    perRetryPolicy:
+      timeout: "5s"
     retryOn:
-      - "5xx"
-      - "connect-failure"
-      - "reset"
+      triggers:
+        - "5xx"
+        - "connect-failure"
+        - "reset"
+      httpStatusCodes:
+        - 503
 ```
+
+`numRetries` defaults to `2` if not set. The per-attempt timeout lives under
+`perRetryPolicy.timeout`. `retryOn` is an object with a `triggers` list (Envoy
+retry conditions) and an optional `httpStatusCodes` list.
 
 ## Retry Conditions
 
@@ -50,7 +58,7 @@ defaultTrafficPolicy:
 
 ## Best Practices
 
-- Set `perTryTimeout` shorter than total timeout
+- Set the per-attempt timeout (`perRetryPolicy.timeout`) shorter than the total timeout
 - Use exponential backoff (handled automatically)
 - Limit retries for non-idempotent requests
 - Combine with circuit breakers to prevent cascade failures

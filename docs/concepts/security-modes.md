@@ -16,7 +16,8 @@ FastGateway offers two mutually exclusive security modes for protecting routes: 
 |---------|--------------|-------------|
 | IP Filtering | Route-level allowlist | Per-client IPs |
 | API Keys | Route-level keys | Per-client keys |
-| JWT Validation | Supported | Not supported |
+| JWT Validation | Route-level | Per-client (via attachments) |
+| mTLS | Not supported | Per-client (via attachments) |
 | OIDC Authentication | Supported | Not supported |
 | Granularity | All consumers same rules | Per-consumer rules |
 
@@ -59,4 +60,5 @@ flowchart LR
 
 - Modes are **mutually exclusive** per route
 - Cannot mix General and Client security on the same route
+- Route-level JWT is only available in General mode; in Client mode, JWT and mTLS are configured per client via client attachments
 - OIDC is only available in General mode

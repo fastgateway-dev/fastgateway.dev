@@ -16,7 +16,7 @@ Rate limiting requires:
 ## Configuration
 
 ```yaml
-defaultTrafficPolicy:
+backendTrafficPolicy:
   rateLimit:
     global:
       rules:
@@ -24,7 +24,9 @@ defaultTrafficPolicy:
             requests: 100
             unit: "Minute"
           clientSelectors:
-            - sourceCIDR: "0.0.0.0/0"
+            - sourceCIDR:
+                value: "0.0.0.0/0"
+                type: "Exact"
 ```
 
 ## Selectors
@@ -33,9 +35,10 @@ Rate limit by different criteria:
 
 | Selector | Description |
 |----------|-------------|
-| **sourceCIDR** | Client IP address range |
+| **sourceCIDR** | Client IP/CIDR range (object with `value` and `type`: `Exact` or `Distinct`) |
 | **headers** | Request header values |
-| **remoteAddress** | Remote client address |
+| **path** | Request path |
+| **methods** | HTTP methods |
 
 ### Header-based Rate Limiting
 
@@ -59,3 +62,4 @@ When limits are exceeded, clients receive:
 | **Second** | Requests per second |
 | **Minute** | Requests per minute |
 | **Hour** | Requests per hour |
+| **Day** | Requests per day |

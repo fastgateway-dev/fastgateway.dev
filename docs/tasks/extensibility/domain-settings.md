@@ -13,10 +13,11 @@ Configure TCP keepalive to detect dead connections:
 
 ```yaml
 domainSettings:
-  tcpKeepalive:
-    probes: 3
-    idleTime: "60s"
-    interval: "10s"
+  clientConnection:
+    tcpKeepalive:
+      probes: 3
+      idleTime: "60s"
+      interval: "10s"
 ```
 
 | Setting | Description |
@@ -27,24 +28,27 @@ domainSettings:
 
 ## Connection Limits
 
-Limit concurrent connections:
+Limit concurrent connections. `connectionLimit` is an object whose numeric field
+is `maxConnections`; `bufferLimit` sits alongside it under `clientConnection`:
 
 ```yaml
 domainSettings:
-  connection:
-    connectionLimit: 10000
+  clientConnection:
+    connectionLimit:
+      maxConnections: 10000
     bufferLimit: "32Ki"
 ```
 
 ## Timeouts
 
-Configure request and idle timeouts:
+Configure request and idle timeouts under `timeout.http`:
 
 ```yaml
 domainSettings:
   timeout:
-    requestReceivedTimeout: "30s"
-    idleTimeout: "300s"
+    http:
+      requestReceivedTimeout: "30s"
+      idleTimeout: "300s"
 ```
 
 | Setting | Description |
@@ -74,24 +78,29 @@ domainSettings:
     ciphers:
       - "ECDHE-ECDSA-AES256-GCM-SHA384"
       - "ECDHE-RSA-AES256-GCM-SHA384"
-    alpnProtocols:
-      - "h2"
-      - "http/1.1"
+    ecdhCurves:
+      - "X25519"
+      - "P-256"
 ```
+
+TLS settings support `minVersion`, `maxVersion`, `ciphers`, `ecdhCurves`, and
+`signatureAlgorithms`.
 
 ## Complete Example
 
 ```yaml
 domainSettings:
-  tcpKeepalive:
-    probes: 3
-    idleTime: "60s"
-    interval: "10s"
-  connection:
-    connectionLimit: 10000
+  clientConnection:
+    tcpKeepalive:
+      probes: 3
+      idleTime: "60s"
+      interval: "10s"
+    connectionLimit:
+      maxConnections: 10000
   timeout:
-    requestReceivedTimeout: "30s"
-    idleTimeout: "300s"
+    http:
+      requestReceivedTimeout: "30s"
+      idleTimeout: "300s"
   http3:
     enabled: true
   tls:

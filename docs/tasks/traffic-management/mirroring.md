@@ -14,35 +14,26 @@ Traffic mirroring (shadowing) copies production traffic to test backends, allowi
 - Debug issues with production request patterns
 - Compare responses between versions
 
-## RequestMirror Configuration
+## Mirror Configuration
 
-Configure mirroring in route filters:
+Add one or more mirror destinations to the route. Every request matched by the
+route is mirrored to each destination:
 
 ```yaml
-filters:
-  - type: "RequestMirror"
-    requestMirror:
-      backendRef:
-        name: "shadow-backend"
-        port: 8080
-      fraction: 100
+mirrors:
+  - type: kubernetes
+    service: "shadow-backend"
+    namespace: "default"
+    port: 8080
 ```
 
-## Mirror Percentage
-
-Control the percentage of traffic to mirror:
-
-| Fraction | Description |
-|----------|-------------|
-| **100** | Mirror all requests (100%) |
-| **50** | Mirror half of requests |
-| **10** | Mirror 10% of requests |
+Mirror destinations are Kubernetes services. There is no sampling percentage —
+all matched traffic is mirrored.
 
 ## Important Notes
 
+- Every matched request is mirrored (no percentage/sampling)
 - Mirrored requests are fire-and-forget
 - Responses from mirror backend are ignored
 - Original request latency is not affected
 - Mirror backend errors don't impact users
-
-Start with low percentages and increase gradually to avoid overwhelming test backends.

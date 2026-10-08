@@ -9,24 +9,31 @@ Failover ensures high availability by routing traffic to healthy backends when p
 
 ## Primary/Fallback Configuration
 
-Define multiple backends with priorities:
+Mark a backend as a fallback with `fallback: true`. Fallback backends receive
+traffic only when the primary (non-fallback) backends are unhealthy:
 
 ```yaml
 backends:
-  - name: "primary"
-    url: "http://api-primary.default.svc.cluster.local:8080"
-    weight: 100
-  - name: "fallback"
-    url: "http://api-fallback.default.svc.cluster.local:8080"
-    weight: 0
+  - type: kubernetes
+    service: "api-primary"
+    namespace: "default"
+    port: 8080
+  - type: kubernetes
+    service: "api-fallback"
+    namespace: "default"
+    port: 8080
+    fallback: true
 ```
+
+The `fallback` flag is a dedicated boolean on the backend. Weights are ignored
+for fallback backends.
 
 ## Health Checks for Automatic Failover
 
 Enable health checks to automatically detect and remove unhealthy backends:
 
 ```yaml
-defaultTrafficPolicy:
+backendTrafficPolicy:
   healthCheck:
     active:
       type: "HTTP"

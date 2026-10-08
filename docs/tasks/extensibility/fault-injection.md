@@ -16,12 +16,11 @@ Fault injection should only be used in testing and staging environments. Never e
 Inject latency to test timeout handling:
 
 ```yaml
-filters:
-  - type: "HTTPFaultInjection"
-    faultInjection:
-      delay:
-        fixedDelay: "5s"
-        percentage: 50
+backendTrafficPolicy:
+  faultInjection:
+    delay:
+      fixedDelay: "5s"
+      percentage: 50
 ```
 
 This adds a 5-second delay to 50% of requests.
@@ -31,12 +30,11 @@ This adds a 5-second delay to 50% of requests.
 Inject errors to test failure handling:
 
 ```yaml
-filters:
-  - type: "HTTPFaultInjection"
-    faultInjection:
-      abort:
-        httpStatus: 503
-        percentage: 10
+backendTrafficPolicy:
+  faultInjection:
+    abort:
+      httpStatus: 503
+      percentage: 10
 ```
 
 This returns a 503 error for 10% of requests.
@@ -46,15 +44,14 @@ This returns a 503 error for 10% of requests.
 Inject both delays and aborts:
 
 ```yaml
-filters:
-  - type: "HTTPFaultInjection"
-    faultInjection:
-      delay:
-        fixedDelay: "2s"
-        percentage: 30
-      abort:
-        httpStatus: 500
-        percentage: 5
+backendTrafficPolicy:
+  faultInjection:
+    delay:
+      fixedDelay: "2s"
+      percentage: 30
+    abort:
+      httpStatus: 500
+      percentage: 5
 ```
 
 ## Configuration Options

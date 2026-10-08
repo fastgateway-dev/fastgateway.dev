@@ -5,7 +5,7 @@ description: Configure load balancing algorithms for distributing traffic
 
 # Load Balancing
 
-FastGateway supports multiple load balancing algorithms through Default Traffic Policy.
+FastGateway supports multiple load balancing algorithms through Backend Traffic Policy.
 
 ## Algorithms
 
@@ -19,7 +19,7 @@ FastGateway supports multiple load balancing algorithms through Default Traffic 
 ## Configuration Example
 
 ```yaml
-defaultTrafficPolicy:
+backendTrafficPolicy:
   loadBalancer:
     type: "ConsistentHash"
     consistentHash:

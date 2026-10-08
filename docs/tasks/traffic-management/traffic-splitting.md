@@ -19,17 +19,34 @@ Configure multiple backends with weight distribution:
 
 ```yaml
 backends:
-  - name: "stable"
-    url: "http://api-v1.default.svc.cluster.local:8080"
+  - type: kubernetes
+    service: "api-v1"
+    namespace: "default"
+    port: 8080
     weight: 90
-  - name: "canary"
-    url: "http://api-v2.default.svc.cluster.local:8080"
+  - type: kubernetes
+    service: "api-v2"
+    namespace: "default"
+    port: 8080
     weight: 10
 ```
 
-Weights are relative values. In this example:
+Weights range from 0 to 100. In this example:
 - 90% of traffic goes to stable (v1)
 - 10% of traffic goes to canary (v2)
+
+Backends can also be external services. An external backend uses `type: external`
+with `address`, `addressType` (`fqdn` or `ip`), and `port` instead of
+`service`/`namespace`:
+
+```yaml
+backends:
+  - type: external
+    address: "api.external.example.com"
+    addressType: fqdn
+    port: 443
+    weight: 100
+```
 
 ## Gradual Rollout Strategy
 

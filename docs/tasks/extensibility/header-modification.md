@@ -5,24 +5,24 @@ description: Modify request and response headers using set, add, and remove oper
 
 # Header Modification
 
-FastGateway supports modifying HTTP headers on both requests and responses using filters.
+FastGateway supports modifying HTTP headers on both requests and responses.
+`requestHeaderModifier` and `responseHeaderModifier` are top-level settings on
+the route (configured on the Traffic tab).
 
 ## Request Header Modification
 
 Modify headers before forwarding to backend:
 
 ```yaml
-filters:
-  - type: "RequestHeaderModifier"
-    requestHeaderModifier:
-      set:
-        - name: "X-Custom-Header"
-          value: "custom-value"
-      add:
-        - name: "X-Request-ID"
-          value: "%REQ_ID%"
-      remove:
-        - "X-Internal-Header"
+requestHeaderModifier:
+  set:
+    - name: "X-Custom-Header"
+      value: "custom-value"
+  add:
+    - name: "X-Request-ID"
+      value: "%REQ_ID%"
+  remove:
+    - "X-Internal-Header"
 ```
 
 ## Response Header Modification
@@ -30,17 +30,15 @@ filters:
 Modify headers in the response to clients:
 
 ```yaml
-filters:
-  - type: "ResponseHeaderModifier"
-    responseHeaderModifier:
-      set:
-        - name: "X-Frame-Options"
-          value: "DENY"
-      add:
-        - name: "X-Response-Time"
-          value: "%RESPONSE_TIME%"
-      remove:
-        - "Server"
+responseHeaderModifier:
+  set:
+    - name: "X-Frame-Options"
+      value: "DENY"
+  add:
+    - name: "X-Response-Time"
+      value: "%RESPONSE_TIME%"
+  remove:
+    - "Server"
 ```
 
 ## Operations

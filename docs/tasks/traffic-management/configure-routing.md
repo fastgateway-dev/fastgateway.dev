@@ -25,6 +25,7 @@ Match requests based on header values:
 matches:
   - headers:
       - name: "X-Version"
+        type: "Exact"
         value: "v2"
 ```
 
@@ -45,6 +46,7 @@ Match on query string parameters:
 matches:
   - queryParams:
       - name: "version"
+        type: "Exact"
         value: "beta"
 ```
 
@@ -55,8 +57,12 @@ For gRPC traffic, use service and method matching:
 ```yaml
 protocol: grpc
 matches:
-  - grpcService: "myapp.UserService"
-    grpcMethod: "GetUser"
+  - grpcService:
+      type: "Exact"
+      value: "myapp.UserService"
+    grpcMethod:
+      type: "Exact"
+      value: "GetUser"
 ```
 
 gRPC routes deploy as GRPCRoute CRD and support service-only matching (all methods) or service+method for specific endpoints.

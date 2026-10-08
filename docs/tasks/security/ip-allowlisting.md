@@ -13,24 +13,28 @@ In general mode, IP rules are defined directly on the route and apply to all tra
 
 ```yaml
 authorization:
-  clientCIDRs:
+  allowedCIDRs:
     - "10.0.0.0/8"
     - "192.168.1.0/24"
     - "203.0.113.50/32"
 ```
 
-## Client Mode
-
-In client mode, each client has its own IP allowlist. Clients are attached to routes and traffic is validated against their specific IP addresses.
+Alternatively, provide `ipAllowlist` entries, each with an optional description:
 
 ```yaml
-# Client definition
-client:
-  name: "partner-api"
-  ipAddresses:
-    - "203.0.113.0/24"
-    - "198.51.100.10/32"
+ipAllowlist:
+  - cidr: "10.0.0.0/8"
+    description: "Corporate network"
+  - cidr: "203.0.113.50/32"
+    description: "Office gateway"
 ```
+
+## Client Mode
+
+In client mode, each client has its own IP allowlist. Clients are attached to
+routes and traffic is validated against their specific CIDR entries. A client's
+IPs are managed as individual CIDR entries (see
+[Client Management](./client-management)) rather than an inline list on the route.
 
 ## CIDR Notation
 

@@ -21,7 +21,7 @@ This guide covers common issues you may encounter when setting up and using Fast
 
    ```bash
    # Instead of localhost, use host.docker.internal on macOS/Windows
-   NEXT_PUBLIC_API_URL=http://host.docker.internal:8080
+   NEXT_PUBLIC_API_URL=http://host.docker.internal:8081
    ```
 
 2. **Backend not running** - Check if the backend container is running:
@@ -33,17 +33,17 @@ This guide covers common issues you may encounter when setting up and using Fast
 3. **Port conflict** - Verify the port is not already in use:
 
    ```bash
-   lsof -i :8080
+   lsof -i :8081
    ```
 
 4. **Firewall blocking** - Check firewall rules:
 
    ```bash
    # macOS
-   sudo pfctl -s rules | grep 8080
+   sudo pfctl -s rules | grep 8081
 
    # Linux
-   sudo iptables -L -n | grep 8080
+   sudo iptables -L -n | grep 8081
    ```
 
 ### Database Connection Failed
@@ -64,11 +64,15 @@ This guide covers common issues you may encounter when setting up and using Fast
    docker-compose up -d postgres
    ```
 
-2. **Incorrect DATABASE_URL** - Verify the connection string format:
+2. **Incorrect database settings** - The connection string is built from discrete variables. Verify they point at your PostgreSQL instance:
 
    ```bash
-   # Correct format
-   DATABASE_URL=postgres://user:password@host:5432/database?sslmode=disable
+   DATABASE_HOST=localhost
+   DATABASE_PORT=5432
+   DATABASE_USER=fastgateway
+   DATABASE_PASSWORD=fastgateway
+   DATABASE_NAME=fastgateway
+   DATABASE_SSLMODE=disable
    ```
 
 3. **Database does not exist:**
@@ -92,7 +96,7 @@ This guide covers common issues you may encounter when setting up and using Fast
 1. **Token expired** - JWT tokens expire after a set period. Re-login to get a new token:
 
    ```bash
-   curl -X POST http://localhost:8080/api/v1/auth/login \
+   curl -X POST http://localhost:8081/api/v1/auth/login \
      -H "Content-Type: application/json" \
      -d '{"username": "admin", "password": "your-password"}'
    ```
@@ -102,7 +106,7 @@ This guide covers common issues you may encounter when setting up and using Fast
 3. **Token not included** - Ensure the Authorization header is set:
 
    ```bash
-   curl -H "Authorization: Bearer <your-token>" http://localhost:8080/api/v1/projects
+   curl -H "Authorization: Bearer <your-token>" http://localhost:8081/api/v1/projects
    ```
 
 ### UI Login Issues
@@ -119,12 +123,19 @@ This guide covers common issues you may encounter when setting up and using Fast
    CORS_ALLOWED_ORIGINS=http://localhost:3000
    ```
 
-2. **Wrong credentials** - Reset admin password:
+2. **Wrong credentials** - The default admin is seeded automatically from the `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and `ADMIN_EMAIL` environment variables when the server first starts (via `SeedDefaultAdmin`), using the defaults `admin` / `admin123` / `admin@fastgateway.local` when unset. Database migrations run automatically on startup, so there is no separate migrate step for this.
+
+   Seeding only happens when the admin user does not yet exist. If the admin was already created, changing `ADMIN_PASSWORD` has no effect — change the password through the application instead:
 
    ```bash
-   # Re-run database migrations with new admin credentials
-   ADMIN_PASSWORD=newpassword ./backend migrate
+   # While logged in, change your own password via the API
+   curl -X PUT http://localhost:8081/api/v1/auth/password \
+     -H "Authorization: Bearer <token>" \
+     -H "Content-Type: application/json" \
+     -d '{"currentPassword": "old-password", "newPassword": "new-password"}'
    ```
+
+   An Owner can also update another user's password via `PATCH /api/v1/users/{userId}`. (The standalone migration CLI lives at `cmd/migrate` and only runs `up`/`down` — it does not manage admin credentials.)
 
 3. **Browser cache** - Clear browser cookies and local storage, then try again.
 
@@ -141,9 +152,10 @@ This guide covers common issues you may encounter when setting up and using Fast
 1. **Install Envoy Gateway:**
 
    ```bash
-   # Install using Helm
+   # Install using Helm (FastGateway targets Envoy Gateway v1.8, which ships the
+   # newer CRDs FastGateway relies on, e.g. Backend and EnvoyExtensionPolicy)
    helm install eg oci://docker.io/envoyproxy/gateway-helm \
-     --version v1.0.0 \
+     --version v1.8.4 \
      -n envoy-gateway-system \
      --create-namespace
    ```
@@ -248,7 +260,7 @@ This guide covers common issues you may encounter when setting up and using Fast
 
    ```bash
    # Must be set at build time for Next.js
-   NEXT_PUBLIC_API_URL=http://localhost:8080 npm run build
+   NEXT_PUBLIC_API_URL=http://localhost:8081 npm run build
    ```
 
 2. **Clear build cache:**
@@ -310,10 +322,10 @@ kubectl get events -n <namespace> --sort-by='.lastTimestamp'
 
 ```bash
 # Test backend health
-curl http://localhost:8080/health
+curl http://localhost:8081/health
 
 # Test with authentication
-curl -H "Authorization: Bearer <token>" http://localhost:8080/api/v1/projects
+curl -H "Authorization: Bearer <token>" http://localhost:8081/api/v1/projects
 ```
 
 ## Getting Help

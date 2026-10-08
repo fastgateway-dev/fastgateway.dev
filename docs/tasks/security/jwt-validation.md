@@ -7,25 +7,25 @@ description: Configure JWT validation for your routes
 
 FastGateway supports JWT (JSON Web Token) validation to secure your APIs.
 
-## JWT Provider Settings
+## JWT Settings
 
 | Setting | Description |
 |---------|-------------|
 | **issuer** | Expected token issuer (iss claim) |
-| **remoteJWKS** | URL to fetch JSON Web Key Set |
+| **jwksUrl** | URL to fetch JSON Web Key Set |
 | **audiences** | Expected token audiences (aud claim) |
 
 ## Configuration Example
 
+JWT is configured as a flat object on the route:
+
 ```yaml
-jwtAuth:
-  providers:
-    - name: "auth-provider"
-      issuer: "https://auth.example.com"
-      remoteJWKS: "https://auth.example.com/.well-known/jwks.json"
-      audiences:
-        - "api.example.com"
-        - "https://api.example.com"
+jwt:
+  issuer: "https://auth.example.com"
+  jwksUrl: "https://auth.example.com/.well-known/jwks.json"
+  audiences:
+    - "api.example.com"
+    - "https://api.example.com"
 ```
 
 ## Claims to Headers
@@ -33,20 +33,18 @@ jwtAuth:
 Extract JWT claims and forward them as headers to backends:
 
 ```yaml
-jwtAuth:
-  providers:
-    - name: "auth-provider"
-      issuer: "https://auth.example.com"
-      remoteJWKS: "https://auth.example.com/.well-known/jwks.json"
-      audiences:
-        - "api.example.com"
-      claimsToHeaders:
-        - claim: "sub"
-          header: "X-User-ID"
-        - claim: "email"
-          header: "X-User-Email"
-        - claim: "roles"
-          header: "X-User-Roles"
+jwt:
+  issuer: "https://auth.example.com"
+  jwksUrl: "https://auth.example.com/.well-known/jwks.json"
+  audiences:
+    - "api.example.com"
+  claimToHeaders:
+    - claim: "sub"
+      header: "X-User-ID"
+    - claim: "email"
+      header: "X-User-Email"
+    - claim: "roles"
+      header: "X-User-Roles"
 ```
 
 ## Request Example

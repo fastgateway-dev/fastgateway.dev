@@ -35,10 +35,12 @@ Each route specifies one or more backends:
 
 ```yaml
 backends:
-  - name: api-service
+  - type: kubernetes
+    service: api-service
     namespace: production
     port: 8080
     weight: 100
+    fallback: false
 ```
 
 ## Approval Workflow
