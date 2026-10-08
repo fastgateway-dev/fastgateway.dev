@@ -18,6 +18,11 @@ export default function HomepageHero(): JSX.Element {
         <div className={styles.buttons}>
           <Link
             className={`${styles.button} ${styles.buttonPrimary}`}
+            to="/docs/demo">
+            Try the Demo
+          </Link>
+          <Link
+            className={`${styles.button} ${styles.buttonSecondary}`}
             to="/docs/getting-started/installation">
             Get Started
           </Link>

@@ -11,6 +11,17 @@ type Section = {
 
 const sections: Section[] = [
   {
+    title: 'Live Demo',
+    description:
+      'Try FastGateway in a free hosted sandbox — walk through the full setup, no install required.',
+    href: '/docs/demo',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="5 3 19 12 5 21 5 3" />
+      </svg>
+    ),
+  },
+  {
     title: 'Getting Started',
     description:
       'Install FastGateway with Helm, access the UI, and create your first route.',
