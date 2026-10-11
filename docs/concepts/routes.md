@@ -6,16 +6,20 @@ description: Traffic routing rules and backend configuration
 
 # Routes
 
-Routes define how traffic flows from domains to backend services, supporting both HTTP and gRPC protocols through Kubernetes Gateway API resources.
+Routes define how traffic flows to backend services through Kubernetes Gateway API resources. HTTP and gRPC routes attach to [domains](./domains.md) and match on hostname, path, and headers. TCP and UDP routes attach to [streams](./streams.md) and route by listener port.
 
 ![A domain's Routes tab in FastGateway, showing a prefix route forwarding to a backend service](/img/ui-routes.jpg)
 
 ## Route Types
 
-| Type | Resource | Use Case |
-|------|----------|----------|
-| HTTP | HTTPRoute | REST APIs, web applications |
-| gRPC | GRPCRoute | gRPC services |
+| Type | Resource | Attaches to | Use Case |
+|------|----------|-------------|----------|
+| HTTP | HTTPRoute | Domain | REST APIs, web applications |
+| gRPC | GRPCRoute | Domain | gRPC services |
+| TCP | TCPRoute | Stream | Databases, Redis, Kafka, other TCP services |
+| UDP | UDPRoute | Stream | DNS, syslog, other UDP services |
+
+HTTP and gRPC routes are hostname-keyed: they match incoming requests by hostname, path, header, method, and query. TCP and UDP routes are port-keyed: they route by the listener port alone, with no Layer-7 matching. See [Streams](./streams.md) for how TCP and UDP routing works.
 
 ## Matching Rules
 

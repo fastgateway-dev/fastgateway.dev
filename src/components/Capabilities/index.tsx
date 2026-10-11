@@ -17,7 +17,7 @@ const capabilities: Capability[] = [
     title: 'Traffic Management',
     subtitle: 'Route traffic with precision',
     description:
-      'Configure HTTP and gRPC routing rules through an intuitive interface. Define matching, splitting, mirroring, and resilience policies without writing YAML.',
+      'Configure HTTP, gRPC, and Layer-4 TCP/UDP routing rules through an intuitive interface. Define matching, splitting, mirroring, and resilience policies without writing YAML.',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
@@ -26,6 +26,7 @@ const capabilities: Capability[] = [
     items: [
       'Path, header, method, and query parameter matching',
       'gRPC service and method routing',
+      'Layer-4 TCP and UDP routing on streams',
       'Traffic splitting for canary and blue-green deployments',
       'Load balancing (RoundRobin, Random, LeastRequest, ConsistentHash)',
       'Failover with primary and fallback backends',

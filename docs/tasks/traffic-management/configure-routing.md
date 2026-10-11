@@ -7,6 +7,8 @@ description: Configure path, header, method, query parameter, and gRPC routing r
 
 FastGateway routes traffic using rules you set in the route builder. Open a domain and click **New Route**, then open the **Traffic** tab and work in the **Request Matching** section. Set the **Protocol** (HTTP or gRPC) first on the **Basic Info** tab, since it changes which matching fields appear.
 
+This page covers HTTP and gRPC routing on domains. For TCP and UDP services, see [Create a TCP/UDP Route](./tcp-udp-routing.md).
+
 ![The Traffic tab of the route builder, where you choose a backend type and add Kubernetes or external services with weights for traffic splitting](/img/ui-route-traffic.jpg)
 
 ## Path Matching

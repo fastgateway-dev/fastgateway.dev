@@ -18,7 +18,7 @@ const FeatureList: FeatureItem[] = [
       </svg>
     ),
     description:
-      'HTTP and gRPC routing, traffic splitting, load balancing, circuit breakers, retries, and rate limiting.',
+      'HTTP, gRPC, and Layer-4 TCP/UDP routing, traffic splitting, load balancing, circuit breakers, retries, and rate limiting.',
     link: '/docs/tasks/traffic-management/configure-routing',
   },
   {

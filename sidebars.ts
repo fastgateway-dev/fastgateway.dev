@@ -24,6 +24,7 @@ const sidebars: SidebarsConfig = {
         'concepts/certificates',
         'concepts/dns-management',
         'concepts/routes',
+        'concepts/streams',
         'concepts/clients',
         'concepts/security-modes',
         'concepts/approval-workflow',
@@ -44,6 +45,7 @@ const sidebars: SidebarsConfig = {
             'tasks/traffic-management/mirroring',
             'tasks/traffic-management/timeouts-retries',
             'tasks/traffic-management/rate-limiting',
+            'tasks/traffic-management/tcp-udp-routing',
           ],
         },
         {

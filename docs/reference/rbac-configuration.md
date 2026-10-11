@@ -58,6 +58,12 @@ rules:
     resources: ["grpcroutes"]
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
   - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["tcproutes"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["udproutes"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["gateway.networking.k8s.io"]
     resources: ["referencegrants"]
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
   - apiGroups: ["gateway.envoyproxy.io"]
@@ -118,6 +124,8 @@ kubectl apply -f fastgateway-rbac.yaml
 | `gateway.networking.k8s.io` | gatewayclasses | get, list, watch, create, update, patch, delete | Manage GatewayClass resources |
 | `gateway.networking.k8s.io` | httproutes | get, list, watch, create, update, patch, delete | Manage HTTP routing rules |
 | `gateway.networking.k8s.io` | grpcroutes | get, list, watch, create, update, patch, delete | Manage gRPC routing rules |
+| `gateway.networking.k8s.io` | tcproutes | get, list, watch, create, update, patch, delete | Manage TCP routing rules for streams |
+| `gateway.networking.k8s.io` | udproutes | get, list, watch, create, update, patch, delete | Manage UDP routing rules for streams |
 | `gateway.networking.k8s.io` | referencegrants | get, list, watch, create, update, patch, delete | Allow cross-namespace references for routing |
 | `gateway.envoyproxy.io` | securitypolicies | get, list, watch, create, update, patch, delete | Manage authentication and authorization |
 | `gateway.envoyproxy.io` | backendtrafficpolicies | get, list, watch, create, update, patch, delete | Manage backend traffic policies (rate limiting, retries, etc.) |
