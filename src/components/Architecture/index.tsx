@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './styles.module.css';
 
-export default function Architecture(): JSX.Element {
+export default function Architecture(): React.JSX.Element {
   return (
     <section className={styles.architecture}>
       <div className={styles.architectureContainer}>

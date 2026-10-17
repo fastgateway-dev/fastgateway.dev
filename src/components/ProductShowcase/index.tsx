@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './styles.module.css';
 
-export default function ProductShowcase(): JSX.Element {
+export default function ProductShowcase(): React.JSX.Element {
   return (
     <section className={styles.showcase}>
       <div className={styles.container}>

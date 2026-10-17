@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './styles.module.css';
 
-export default function RouteBuilder(): JSX.Element {
+export default function RouteBuilder(): React.JSX.Element {
   return (
     <section className={styles.routeBuilder}>
       <div className={styles.container}>

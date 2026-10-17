@@ -8,7 +8,7 @@ import Capabilities from '@site/src/components/Capabilities';
 import RouteBuilder from '@site/src/components/RouteBuilder';
 import QuickStart from '@site/src/components/QuickStart';
 
-export default function Home(): JSX.Element {
+export default function Home(): React.JSX.Element {
   return (
     <Layout
       title="Gateway API Management Simplified"

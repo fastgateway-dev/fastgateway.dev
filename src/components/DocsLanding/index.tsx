@@ -110,7 +110,7 @@ const sections: Section[] = [
   },
 ];
 
-export default function DocsLanding(): JSX.Element {
+export default function DocsLanding(): React.JSX.Element {
   return (
     <div className={styles.landing}>
       <h1 className={styles.pageTitle}>Documentation</h1>

@@ -117,8 +117,11 @@ const config: Config = {
         // Keep <Step number title src alt> tags in the twins: the step title
         // and screenshot live in props, which the plugin would otherwise drop.
         preserveComponents: ['Step'],
+        // The docs landing page is a React component with no markdown body;
+        // its twin would be empty. Its markdown alternate is /llms.md instead
+        // (see src/theme/DocItem/Metadata).
+        ignoreFiles: ['docs/index.mdx'],
         includeOrder: [
-          'docs/index.md*',
           'docs/demo.md*',
           'docs/getting-started/installation.md*',
           'docs/getting-started/**',

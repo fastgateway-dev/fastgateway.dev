@@ -25,7 +25,7 @@ helm repo update`,
   },
 ];
 
-export default function QuickStart(): JSX.Element {
+export default function QuickStart(): React.JSX.Element {
   return (
     <section className={styles.quickstart}>
       <div className={styles.quickstartContainer}>

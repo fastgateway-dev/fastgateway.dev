@@ -36,7 +36,7 @@ const badges: Badge[] = [
   },
 ];
 
-export default function TrustBadges(): JSX.Element {
+export default function TrustBadges(): React.JSX.Element {
   return (
     <section className={styles.trustSection}>
       <div className={styles.container}>

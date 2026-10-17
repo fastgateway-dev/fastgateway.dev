@@ -267,7 +267,7 @@ function CapabilitySection({
   );
 }
 
-export default function Capabilities(): JSX.Element {
+export default function Capabilities(): React.JSX.Element {
   return (
     <section className={styles.capabilities}>
       <div className={styles.capabilitiesContainer}>

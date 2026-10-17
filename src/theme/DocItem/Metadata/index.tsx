@@ -8,10 +8,15 @@ import {useDoc} from '@docusaurus/plugin-content-docs/client';
 type Props = WrapperProps<typeof MetadataType>;
 
 // Points agents at the raw-markdown twin that docusaurus-plugin-llms writes
-// for every doc at <permalink without trailing slash>.md.
+// for every doc at <permalink without trailing slash>.md. The docs landing
+// page has no twin (it is a React component); its markdown equivalent is the
+// docs index, /llms.md.
 export default function MetadataWrapper(props: Props): ReactNode {
   const {metadata} = useDoc();
-  const markdownHref = `${metadata.permalink.replace(/\/$/, '')}.md`;
+  const markdownHref =
+    metadata.permalink === '/docs/'
+      ? '/llms.md'
+      : `${metadata.permalink.replace(/\/$/, '')}.md`;
   return (
     <>
       <Metadata {...props} />
