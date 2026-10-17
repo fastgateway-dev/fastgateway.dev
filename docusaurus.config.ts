@@ -2,12 +2,33 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
+// Intro of /llms.txt (also served as /llms.md and /index.md, see postbuild in
+// package.json). Keep the facts here true; agents quote them.
+const LLMS_INTRO = `FastGateway is an open-source (Apache-2.0) control plane for the Kubernetes Gateway API on Envoy Gateway. Teams manage Gateways, routes, security policies, TLS certificates, and DNS records through a web UI and REST API, with approval workflows and RBAC, instead of hand-writing YAML.
+
+Key facts:
+
+- Self-hosted: installs into your Kubernetes cluster with Helm. The REST API runs inside your installation.
+- Routing: HTTP and gRPC routes on domains (hostname-keyed), TCP and UDP routes on streams (port-keyed).
+- Generates Gateway API resources (HTTPRoute, GRPCRoute, TCPRoute, UDPRoute) and Envoy Gateway policies.
+- Certificate management with self-signed and ACME issuers (cert-manager), and DNS management for Cloudflare, AWS Route 53, and Google Cloud DNS.
+- Live demo, no signup: https://fastgateway.dev/docs/demo/
+- Source code: https://github.com/fastgateway-dev
+- REST API spec (OpenAPI 3.0): https://fastgateway.dev/openapi.yaml
+
+For AI agents: each link below is the markdown version of a docs page. Cite the HTML page (the same URL without .md) when pointing people to the docs. All docs in one file: https://fastgateway.dev/llms-full.txt. More guidance: https://fastgateway.dev/agents.md`;
+
+const LLMS_FULL_INTRO = `FastGateway is an open-source (Apache-2.0) control plane for the Kubernetes Gateway API on Envoy Gateway, with a web UI, REST API, approval workflows, and RBAC. This file contains the full text of every FastGateway docs page and blog post. Index: https://fastgateway.dev/llms.txt. REST API spec: https://fastgateway.dev/openapi.yaml`;
+
 const config: Config = {
   title: 'FastGateway',
   tagline: 'Gateway API Management. Simplified.',
   favicon: 'img/favicon.ico',
   url: 'https://fastgateway.dev',
   baseUrl: '/',
+  // GitHub Pages serves every page as <path>/index.html and 301s <path> to
+  // <path>/, so canonical, sitemap, and internal links must carry the slash.
+  trailingSlash: true,
   organizationName: 'fastgateway-dev',
   projectName: 'fastgateway.dev',
   onBrokenLinks: 'warn',
@@ -40,6 +61,18 @@ const config: Config = {
           changefreq: 'weekly',
           priority: 0.5,
           filename: 'sitemap.xml',
+          // Search UI and blog listing pages have no content of their own.
+          ignorePatterns: [
+            '/search',
+            '/search/**',
+            '/blog/tags',
+            '/blog/tags/**',
+            '/blog/archive',
+            '/blog/archive/**',
+            '/blog/authors',
+            '/blog/authors/**',
+            '/blog/page/**',
+          ],
         },
       } satisfies Preset.Options,
     ],
@@ -73,6 +106,28 @@ const config: Config = {
         title: 'FastGateway',
         description:
           'UI-driven platform for managing Kubernetes Gateway API resources with approval workflows, multi-cluster support, and enterprise security.',
+        rootContent: LLMS_INTRO,
+        fullRootContent: LLMS_FULL_INTRO,
+        // Writes a raw-markdown twin of every page at <path>.md and points
+        // llms.txt at those twins. DocItem/BlogPostPage Metadata wrappers in
+        // src/theme advertise each twin with <link rel="alternate">.
+        generateMarkdownFiles: true,
+        excludeImports: true,
+        removeDuplicateHeadings: true,
+        // Keep <Step number title src alt> tags in the twins: the step title
+        // and screenshot live in props, which the plugin would otherwise drop.
+        preserveComponents: ['Step'],
+        includeOrder: [
+          'docs/index.md*',
+          'docs/demo.md*',
+          'docs/getting-started/installation.md*',
+          'docs/getting-started/**',
+          'docs/concepts/projects.md*',
+          'docs/concepts/**',
+          'docs/tasks/**',
+          'docs/reference/**',
+          'blog/**',
+        ],
       },
     ],
   ],
@@ -163,7 +218,11 @@ const config: Config = {
         applicationCategory: 'DeveloperApplication',
         operatingSystem: 'Kubernetes',
         description: 'UI-driven platform for managing Kubernetes Gateway API resources with approval workflows, multi-cluster support, and enterprise security.',
-        url: 'https://fastgateway.dev',
+        url: 'https://fastgateway.dev/',
+        license: 'https://www.apache.org/licenses/LICENSE-2.0',
+        installUrl: 'https://fastgateway.dev/docs/getting-started/installation/',
+        softwareHelp: {'@type': 'CreativeWork', url: 'https://fastgateway.dev/docs/'},
+        sameAs: ['https://github.com/fastgateway-dev'],
         offers: {
           '@type': 'Offer',
           price: '0',
@@ -178,9 +237,9 @@ const config: Config = {
         '@context': 'https://schema.org',
         '@type': 'Organization',
         name: 'FastGateway',
-        url: 'https://fastgateway.dev',
+        url: 'https://fastgateway.dev/',
         logo: 'https://fastgateway.dev/img/logo.png',
-        sameAs: ['https://github.com/fastgateway-dev'],
+        sameAs: ['https://github.com/fastgateway-dev', 'https://x.com/fastgatewaydev'],
       }),
     },
   ],

@@ -148,4 +148,4 @@ fastgateway-frontend-xxx-xxx            1/1     Running   0          1m
 
 ## Next Steps
 
-Once all pods are running, proceed to [Accessing the UI](./accessing-ui) to start using FastGateway.
+Once all pods are running, proceed to [Accessing the UI](/docs/getting-started/accessing-ui/) to start using FastGateway.

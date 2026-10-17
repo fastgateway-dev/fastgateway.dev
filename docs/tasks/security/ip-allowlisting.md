@@ -20,7 +20,7 @@ Requests from any address outside the allowlist receive `403 Forbidden`.
 
 ## Client Mode
 
-In **Client-Based** mode, each client has its own IP allowlist. You attach clients to the route and traffic is validated against the CIDR entries configured on each client. A client's IPs are managed as individual CIDR entries on the client (see [Client Management](./client-management)) rather than entered on the route. Route-level IP allowlisting is not used in client mode.
+In **Client-Based** mode, each client has its own IP allowlist. You attach clients to the route and traffic is validated against the CIDR entries configured on each client. A client's IPs are managed as individual CIDR entries on the client (see [Client Management](./client-management.md)) rather than entered on the route. Route-level IP allowlisting is not used in client mode.
 
 ## CIDR Notation
 

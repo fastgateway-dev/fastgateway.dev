@@ -1,4 +1,12 @@
+# fastgateway.dev
+# AI agents: start at https://fastgateway.dev/llms.txt (index) or
+# https://fastgateway.dev/llms-full.txt (all docs in one file). Every docs page
+# has a markdown version at the page path plus .md, for example
+# https://fastgateway.dev/docs/concepts/streams.md. Guide: https://fastgateway.dev/agents.md
+
 User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
+Disallow: /search
 
 Sitemap: https://fastgateway.dev/sitemap.xml

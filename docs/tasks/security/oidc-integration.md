@@ -52,6 +52,6 @@ The OAuth client secret is never typed into FastGateway. You create a Kubernetes
 - It requires a browser-based flow, redirecting users to the identity provider.
 - Session state is managed via cookies.
 - Configure the callback URL in your OIDC provider to match the **Redirect URL**.
-- For API-to-API authentication, use [JWT Validation](./jwt-validation) instead.
+- For API-to-API authentication, use [JWT Validation](./jwt-validation.md) instead.
 
 The REST API equivalent is documented in the [API Reference](/docs/reference/api-reference).

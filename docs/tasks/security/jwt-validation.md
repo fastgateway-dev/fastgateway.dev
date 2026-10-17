@@ -47,4 +47,4 @@ curl -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIs..." \
 
 ## Client Mode
 
-In **Client-Based** mode, JWT is configured per client on the client's **JWT** tab, then enabled when you attach the client to the route. See [Client Management](./client-management).
+In **Client-Based** mode, JWT is configured per client on the client's **JWT** tab, then enabled when you attach the client to the route. See [Client Management](./client-management.md).
